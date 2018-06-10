@@ -1,0 +1,5 @@
+[
+	{
+		"keys": ["ctrl+space"], "command": "go_complete"
+	}
+]
