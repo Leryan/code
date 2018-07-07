@@ -4,18 +4,11 @@ You will want to change `BRIGHTNESS_FPATH` and `BRIGHTNESS_INCINT`.
 
 `KEYCODE_BUP` and `KEYCODE_BDOWN` are keycodes for brightness up/down.
 
-# Build
+# Build and Install
 
 ```
-gcc -O2 -Wall -lX11 -std=c99 -o brightnessctl brightnessctl.c
-```
-
-# Install
-
-```
-mv brightnessctl /usr/local/bin/
-chown root:root /usr/local/bin/brightnessctl
-chmod u+s /usr/local/bin/brightnessctl
+make
+sudo make install
 ```
 
 # Use
