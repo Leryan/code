@@ -46,13 +46,13 @@ def p_forbes(url):
 def p_generic(url):
     raise NotImplementedError()
 
-def p_parser(url):
+def p_parse(url):
     host = urlparse(url).hostname
     p = p_generic
     if host.endswith('forbes.com'):
         p = p_forbes
 
-    return lambda: p(url)
+    return p(url)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -61,7 +61,7 @@ def main():
 
     args = parser.parse_args()
 
-    html = p_fancy(p_parser(args.url)())
+    html = p_fancy(p_parse(args.url))
     with open('article.html', 'w') as fh:
         fh.write(html)
 
