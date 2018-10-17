@@ -43,6 +43,13 @@ def p_forbes(url):
         '//*[@id="article-container-0"]/div/div[2]/div[1]/article-body-container/div/div'
     ).extract()[0]
 
+def p_eurogamer(url):
+    return parsel.Selector(
+        text=requests.get(url).text
+    ).xpath(
+        '//*[@id="page-wrapper"]/div[2]/div[1]/div[1]/article'
+    ).extract()[0]
+
 def p_generic(url):
     raise NotImplementedError()
 
@@ -51,6 +58,8 @@ def p_parse(url):
     p = p_generic
     if host.endswith('forbes.com'):
         p = p_forbes
+    elif host.endswith('eurogamer.net'):
+        p = p_eurogamer
 
     return p(url)
 
