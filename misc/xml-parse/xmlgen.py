@@ -19,9 +19,10 @@ if __name__ == '__main__':
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
     <image:image>
-<image:loc>
+        <image:loc>
 
-https://localhost/medias/BLABLABLABLLTNATENRSUTIENRSTUINERSTUINRESTUNRISTENRUSITE{0}.jpg</image:loc>
+https://localhost/medias/BLABLABLABLLTNATENRSUTIENRSTUINERSTUINRESTUNRISTENRUSITE{0}.jpg
+        </image:loc>
         <image:title>BLNASIRTENRUSTIENRSTUINRESTUIE{0}</image:title>
     </image:image>
 </url>""".format(i))
