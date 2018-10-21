@@ -1,47 +1,45 @@
-extern crate xml;
+extern crate quick_xml;
 
 use std::fs::File;
 use std::io::BufReader;
-use xml::reader::{EventReader, XmlEvent};
+use quick_xml::Reader;
+use quick_xml::events::Event;
 
 fn main() {
-    println!("Rust xml-rs SAX parsing");
+    println!("Rust quick_xml SAX parsing");
     let mut urls: Vec<String> = Vec::new();
     let file = File::open("sitemap.xml").unwrap();
-    let file = BufReader::new(file);
+    let buffr = BufReader::new(file);
+    let mut parser = Reader::from_reader(buffr);
     let mut loc = false;
 
-    let parser = EventReader::new(file);
-    for e in parser {
-        match e {
-            Ok(XmlEvent::StartElement { name, .. }) => {
-                match name {
-                    xml::name::OwnedName{ local_name, prefix, .. } => {
-                        match prefix {
-                            None => {
-                                if local_name == "loc" {
-                                    loc = true;
-                                }
-                            },
-                            _ => ()
-                        }
-                    }
+
+    let mut pbuf = Vec::new();
+    loop {
+        match parser.read_event(&mut pbuf) {
+            Ok(Event::Start(ref e)) => {
+                match e.name() {
+                    b"loc" => loc = true,
+                    _ => (),
                 }
-            }
-            Ok(XmlEvent::Characters(s)) => {
+            },
+            Ok(Event::Text(e)) => {
                 if loc {
-                    urls.push(s.clone());
+                    let v = e.unescape_and_decode(&parser).unwrap();
+                    urls.push(v);
+                }
+            },
+            Ok(Event::End(ref e)) => {
+                match e.name() {
+                    b"loc" => loc = false,
+                    _ => (),
                 }
             }
-            Ok(XmlEvent::EndElement{..}) => {
-                loc = false;
-            }
-            Err(e) => {
-                println!("Error: {}", e);
-                break;
-            }
-            _ => {}
+            Err(_) => break,
+            Ok(Event::Eof) => break,
+            _ => (),
         }
+        pbuf.clear();
     }
 
     println!("Memory? heh… dunno, but i have {} results", urls.len());
