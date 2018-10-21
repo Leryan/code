@@ -5,6 +5,7 @@ use std::io::BufReader;
 use xml::reader::{EventReader, XmlEvent};
 
 fn main() {
+    println!("Rust xml-rs SAX parsing");
     let mut urls: Vec<String> = Vec::new();
     let file = File::open("sitemap.xml").unwrap();
     let file = BufReader::new(file);

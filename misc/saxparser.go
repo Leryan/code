@@ -9,13 +9,8 @@ import (
 	"runtime"
 )
 
-func pm() {
-	var m runtime.MemStats
-	runtime.ReadMemStats(&m)
-	fmt.Printf("totalmem: %v MiB\n", m.Alloc/1024/1024)
-}
-
 func main() {
+	fmt.Println("Go SAX parsing")
 	f, _ := os.Open("sitemap.xml")
 	r := bufio.NewReader(f)
 	d := xml.NewDecoder(r)
@@ -40,6 +35,8 @@ func main() {
 		}
 	}
 
-	pm()
-	fmt.Println(len(data))
+	var m runtime.MemStats
+	runtime.ReadMemStats(&m)
+
+	fmt.Printf("%v MiB, %d results\n", m.Alloc/1024/1024, len(data))
 }

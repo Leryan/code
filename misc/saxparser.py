@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from pprint import pprint
+import resource
 from xml import sax
 
 
@@ -54,6 +54,8 @@ class ResultStore:
             self.products[self._last_product]['image_url'] = c
 
 if __name__ == '__main__':
+    print('pure python SAX parsing')
+
     result_store = ResultStore()
     result_store.add_rule('/urlset/url/loc', ResultStore.store_url)
     result_store.add_rule('/urlset/url/image:image/image:loc', ResultStore.store_image_url)
@@ -61,4 +63,4 @@ if __name__ == '__main__':
     handler = Handler(result_store)
     sax.parse("sitemap.xml", handler)
 
-    pprint(result_store.products)
+    print(f'{int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024)} MiB, {len(result_store.products)} results')
