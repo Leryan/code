@@ -12,12 +12,12 @@ fn main() {
     let buffr = BufReader::new(file);
     let mut parser = Reader::from_reader(buffr);
     let mut loc = false;
-
-
     let mut pbuf = Vec::new();
+
+    parser.trim_text(true);
     loop {
         match parser.read_event(&mut pbuf) {
-            Ok(Event::Start(ref e)) => {
+            Ok(Event::Start(e)) => {
                 match e.name() {
                     b"loc" => loc = true,
                     _ => (),
@@ -29,7 +29,7 @@ fn main() {
                     urls.push(v);
                 }
             },
-            Ok(Event::End(ref e)) => {
+            Ok(Event::End(e)) => {
                 match e.name() {
                     b"loc" => loc = false,
                     _ => (),
