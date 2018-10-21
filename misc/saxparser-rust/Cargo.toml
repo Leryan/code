@@ -1,0 +1,7 @@
+[package]
+name = "saxparser"
+version = "0.1.0"
+authors = ["Florent Peterschmitt <florent@peterschmitt.fr>"]
+
+[dependencies]
+xml-rs = "0.8"
