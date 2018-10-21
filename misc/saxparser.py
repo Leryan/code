@@ -22,45 +22,21 @@ class Handler(sax.handler.ContentHandler):
         self._location += '/' + name
 
     def characters(self, content):
-        self._rs.job(self._location, content)
+        if self._location == '/urlset/url/loc':
+            u = content.strip()
+            if u:
+                self._rs.append(u)
 
     def endElement(self, name):
         s = '/' + name
         if self._location.endswith(s):
             self._location = ''.join(self._location[:-len(s)])
 
-class ResultStore:
-
-    def __init__(self):
-        self.rules = {}
-        self.products = {}
-        self._last_product = None
-
-    def add_rule(self, matches, func):
-        self.rules[matches] = func
-
-    def job(self, location, content):
-        f = self.rules.get(location)
-        if f:
-            f(self, content)
-
-    def store_url(self, content):
-        self.products[content] = {}
-        self._last_product = content
-
-    def store_image_url(self, content):
-        c = content.strip()
-        if c:
-            self.products[self._last_product]['image_url'] = c
-
 if __name__ == '__main__':
     print('pure python SAX parsing')
 
-    result_store = ResultStore()
-    result_store.add_rule('/urlset/url/loc', ResultStore.store_url)
-    result_store.add_rule('/urlset/url/image:image/image:loc', ResultStore.store_image_url)
-
-    handler = Handler(result_store)
+    res = list()
+    handler = Handler(res)
     sax.parse("sitemap.xml", handler)
 
-    print(f'{int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024)} MiB, {len(result_store.products)} results')
+    print(f'{int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss/1024)} MiB, {len(res)} results')

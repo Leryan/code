@@ -44,5 +44,5 @@ fn main() {
         }
     }
 
-    println!("{}", urls.len());
+    println!("Memory? heh… dunno, but i have {} results", urls.len());
 }
