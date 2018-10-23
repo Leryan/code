@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
 	"os"
@@ -108,6 +109,8 @@ func goMyParser() {
 	r := bufio.NewReader(f)
 	p := newMyParser(r)
 	ch := make(chan mpToken)
+	tag := []byte("loc")
+	locs := make([][]byte, 0)
 
 	go func() {
 		err := p.Parse(ch)
@@ -117,14 +120,13 @@ func goMyParser() {
 		close(ch)
 	}()
 
-	locs := make([]string, 0)
 	for t := range ch {
-		if string(t.TagName) == "loc" {
-			locs = append(locs, strings.TrimSpace(string(t.Data)))
+		if bytes.Compare(t.TagName, tag) == 0 {
+			locs = append(locs, t.Data)
 		}
 	}
 
-	fmt.Println(locs[len(locs)-1])
+	fmt.Println(strings.TrimSpace(string(locs[len(locs)-1])))
 }
 
 func main() {
