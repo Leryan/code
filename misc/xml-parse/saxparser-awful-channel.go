@@ -104,7 +104,15 @@ func newMyParser(reader io.Reader) *myParser {
 }
 
 func goMyParser() {
-	fmt.Println("Go SAX MyParser")
+}
+
+func main() {
+	/*
+		cpuprof, _ := os.Create("cpuprof")
+		pprof.StartCPUProfile(cpuprof)
+		defer pprof.StopCPUProfile()
+	*/
+	fmt.Println("Go SAX Awful Channel")
 	f, _ := os.Open("sitemap.xml")
 	r := bufio.NewReader(f)
 	p := newMyParser(r)
@@ -127,8 +135,4 @@ func goMyParser() {
 	}
 
 	fmt.Println(strings.TrimSpace(string(locs[len(locs)-1])))
-}
-
-func main() {
-	goMyParser()
 }

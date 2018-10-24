@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"runtime/pprof"
 	"strings"
 )
 
@@ -42,13 +41,29 @@ type myParser struct {
 	tagCurrent []byte
 	s          uint64
 	tok        mpToken
-	acc        []byte
+	acc        bVec
 	rn         int
 	irn        int
 	rbufferr   error
 	blchar     bool
 	lchar      byte
 	lrerr      error
+}
+
+type bVec struct {
+	vec []byte
+}
+
+func (v *bVec) Push(b byte) {
+	v.vec = append(v.vec, b)
+}
+
+func (v *bVec) Reset() {
+	v.vec = make([]byte, 0, 64)
+}
+
+func (v bVec) Pull() []byte {
+	return v.vec
 }
 
 func c(S uint64) bool {
@@ -76,27 +91,27 @@ func (p *myParser) parse() bool {
 			if c(p.s & NONE) {
 				if p.rbuf[p.irn] != '/' {
 					p.s = START_TAG_IN
-					p.acc = make([]byte, 0)
+					p.acc.Reset()
 				}
 			} else if c(p.s & DATA) {
 				if p.rbuf[p.irn] == '/' {
 					p.s = END_TAG_IN
-					p.tok.SetData(p.acc)
+					p.tok.SetData(p.acc.Pull())
 					return true
 				}
 				p.s = START_TAG_IN
-				p.acc = make([]byte, 0)
+				p.acc.Reset()
 			}
 		} else if b == '>' {
 			if c(p.s & START_TAG_IN) {
 				p.s = DATA
-				p.tok.SetTagName(p.acc)
-				p.acc = make([]byte, 0)
+				p.tok.SetTagName(p.acc.Pull())
+				p.acc.Reset()
 			} else if c(p.s & END_TAG_IN) {
 				p.s = NONE
 			}
 		} else if c(p.s&DATA | p.s&START_TAG_IN) {
-			p.acc = append(p.acc, b)
+			p.acc.Push(b)
 		}
 	}
 
@@ -125,11 +140,20 @@ func newMyParser(reader io.Reader) (*myParser, error) {
 		s:      NONE,
 	}
 	p.read()
+	p.acc.Reset()
 	return &p, p.lrerr
 }
 
 func goMyParser() {
-	fmt.Println("Go SAX MyParser")
+}
+
+func main() {
+	/*
+		cpuprof, _ := os.Create("cpuprof")
+		pprof.StartCPUProfile(cpuprof)
+		defer pprof.StopCPUProfile()
+	*/
+	fmt.Println("Go SAX Awful Procedural")
 	f, _ := os.Open("sitemap.xml")
 	r := bufio.NewReader(f)
 	p, _ := newMyParser(r)
@@ -150,11 +174,4 @@ func goMyParser() {
 		}
 	}
 	fmt.Println(strings.TrimSpace(string(locs[len(locs)-1])))
-}
-
-func main() {
-	cpuprof, _ := os.Create("cpuprof")
-	pprof.StartCPUProfile(cpuprof)
-	defer pprof.StopCPUProfile()
-	goMyParser()
 }
