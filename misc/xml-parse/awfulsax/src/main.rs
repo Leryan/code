@@ -18,7 +18,7 @@ impl Token {
 
 struct Parser<Read> {
     bufr: Read,
-    s: u64,
+    s: State,
     nread: usize,
     irn: usize,
     acc: Vec<u8>,
@@ -26,10 +26,12 @@ struct Parser<Read> {
     tok: Token,
 }
 
-const P_NONE: u64 = 0x0001;
-const P_DATA: u64 = 0x0002;
-const P_START_TAG_IN: u64 = 0x0004;
-const P_END_TAG_IN: u64 = 0x0008;
+enum State {
+    None,
+    Data,
+    StartTag,
+    EndTag,
+}
 
 impl<R: Read> Parser<R> {
     fn new(reader: R) -> Parser<R> {
@@ -40,7 +42,7 @@ impl<R: Read> Parser<R> {
         }
         return Parser {
             bufr: reader,
-            s: P_NONE,
+            s: State::None,
             nread: 0,
             irn: 0,
             acc: Vec::with_capacity(8192),
@@ -54,10 +56,10 @@ impl<R: Read> Parser<R> {
             if self.irn == self.nread {
                 let read = self.bufr.read(&mut self.bvec);
                 match read {
+                    Ok(0) => {
+                        return None;
+                    }
                     Ok(c) => {
-                        if c == 0 {
-                            return None;
-                        }
                         self.irn = 0;
                         self.nread = c - 1;
                     }
@@ -68,13 +70,12 @@ impl<R: Read> Parser<R> {
                 }
             }
 
-            if self.nread > 0 {
-                match self.parse_chunk() {
+            match self.nread {
+                0 => return None,
+                _ => match self.parse_chunk() {
                     Some(t) => return Some(t),
                     _ => (),
-                }
-            } else {
-                return None;
+                },
             }
         }
     }
@@ -83,35 +84,48 @@ impl<R: Read> Parser<R> {
         while self.irn < self.nread {
             self.irn += 1;
             let b: u8 = self.bvec[self.irn - 1];
-            let nb: u8 = self.bvec[self.irn];
 
-            if b == '<' as u8 {
-                if self.s & P_NONE > 0 {
-                    if nb != '/' as u8 {
-                        self.s = P_START_TAG_IN;
+            if b == b'<' {
+                let nb: u8 = self.bvec[self.irn];
+                match self.s {
+                    State::None => {
+                        if nb != b'/' {
+                            self.s = State::StartTag;
+                            self.acc.clear();
+                        }
+                    }
+                    State::Data => {
+                        if nb == b'/' {
+                            self.s = State::EndTag;
+                            self.tok.data.clear();
+                            self.tok.data.append(&mut self.acc.clone());
+                            return Some(self.tok.clone());
+                        }
+                        self.s = State::StartTag;
                         self.acc.clear();
                     }
-                } else if self.s & P_DATA > 0 {
-                    if nb == '/' as u8 {
-                        self.s = P_END_TAG_IN;
-                        self.tok.data.clear();
-                        self.tok.data.append(&mut self.acc.clone());
-                        return Some(self.tok.clone());
+                    _ => (),
+                }
+            } else if b == b'>' {
+                match self.s {
+                    State::StartTag => {
+                        self.s = State::Data;
+                        self.tok.tag.clear();
+                        self.tok.tag.append(&mut self.acc.clone());
+                        self.acc.clear();
                     }
-                    self.s = P_START_TAG_IN;
-                    self.acc.clear();
+                    State::EndTag => {
+                        self.s = State::None;
+                    }
+                    _ => (),
                 }
-            } else if b == '>' as u8 {
-                if self.s & P_START_TAG_IN > 0 {
-                    self.s = P_DATA;
-                    self.tok.tag.clear();
-                    self.tok.tag.append(&mut self.acc.clone());
-                    self.acc.clear();
-                } else if self.s & P_END_TAG_IN > 0 {
-                    self.s = P_NONE;
+            } else {
+                match self.s {
+                    State::Data | State::StartTag => {
+                        self.acc.push(b);
+                    }
+                    _ => (),
                 }
-            } else if (self.s & P_DATA | self.s & P_START_TAG_IN) > 0 {
-                self.acc.push(b);
             }
         }
 
@@ -128,7 +142,9 @@ fn main() {
 
     loop {
         match parser.parse() {
-            Some(tok) => urls.push(tok.data),
+            Some(tok) => {
+                urls.push(tok.data);
+            }
             None => {
                 println!("nothing");
                 break;
