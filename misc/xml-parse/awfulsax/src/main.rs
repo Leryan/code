@@ -80,52 +80,63 @@ impl<R: Read> Parser<R> {
         }
     }
 
+    fn parse_open(&mut self) -> Option<Token> {
+        let nb: u8 = self.bvec[self.irn];
+        match self.s {
+            State::None => {
+                if nb != b'/' {
+                    self.s = State::StartTag;
+                    self.acc.clear();
+                }
+            }
+            State::Data => {
+                if nb == b'/' {
+                    self.s = State::EndTag;
+                    self.tok.data.clear();
+                    self.tok.data.append(&mut self.acc.clone());
+                    return Some(self.tok.clone());
+                }
+                self.s = State::StartTag;
+                self.acc.clear();
+            }
+            _ => {}
+        }
+
+        None
+    }
+
+    fn parse_close(&mut self) {
+        match self.s {
+            State::StartTag => {
+                self.s = State::Data;
+                self.tok.tag.clear();
+                self.tok.tag.append(&mut self.acc.clone());
+                self.acc.clear();
+            }
+            State::EndTag => {
+                self.s = State::None;
+            }
+            _ => {}
+        }
+    }
+
     fn parse_chunk(&mut self) -> Option<Token> {
         while self.irn < self.nread {
             self.irn += 1;
             let b: u8 = self.bvec[self.irn - 1];
 
-            if b == b'<' {
-                let nb: u8 = self.bvec[self.irn];
-                match self.s {
-                    State::None => {
-                        if nb != b'/' {
-                            self.s = State::StartTag;
-                            self.acc.clear();
-                        }
-                    }
-                    State::Data => {
-                        if nb == b'/' {
-                            self.s = State::EndTag;
-                            self.tok.data.clear();
-                            self.tok.data.append(&mut self.acc.clone());
-                            return Some(self.tok.clone());
-                        }
-                        self.s = State::StartTag;
-                        self.acc.clear();
-                    }
-                    _ => (),
-                }
-            } else if b == b'>' {
-                match self.s {
-                    State::StartTag => {
-                        self.s = State::Data;
-                        self.tok.tag.clear();
-                        self.tok.tag.append(&mut self.acc.clone());
-                        self.acc.clear();
-                    }
-                    State::EndTag => {
-                        self.s = State::None;
-                    }
-                    _ => (),
-                }
-            } else {
-                match self.s {
+            match b {
+                b'<' => match self.parse_open() {
+                    Some(tok) => return Some(tok),
+                    _ => {}
+                },
+                b'>' => self.parse_close(),
+                _ => match self.s {
                     State::Data | State::StartTag => {
                         self.acc.push(b);
                     }
-                    _ => (),
-                }
+                    _ => {}
+                },
             }
         }
 
@@ -137,7 +148,7 @@ fn main() {
     let capacity = 128 * 1024;
     let file = File::open("sitemap.xml").unwrap();
     let bufr = BufReader::with_capacity(capacity, file);
-    let mut urls: Vec<Vec<u8>> = Vec::with_capacity(8192);
+    let mut urls: Vec<Vec<u8>> = Vec::new();
     let mut parser = Parser::new(bufr);
 
     loop {
