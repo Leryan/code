@@ -100,6 +100,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "quickxml"
+version = "0.1.0"
+dependencies = [
+ "quick-xml 0.12.4 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "quote"
 version = "0.6.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -111,13 +118,6 @@ dependencies = [
 name = "rustc-demangle"
 version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-
-[[package]]
-name = "saxparser"
-version = "0.1.0"
-dependencies = [
- "quick-xml 0.12.4 (registry+https://github.com/rust-lang/crates.io-index)",
-]
 
 [[package]]
 name = "syn"

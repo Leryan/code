@@ -1,7 +1,6 @@
 [package]
-name = "saxparser"
+name = "custom"
 version = "0.1.0"
 authors = ["Florent Peterschmitt <florent@peterschmitt.fr>"]
 
 [dependencies]
-quick-xml = "0.12.0"

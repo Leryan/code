@@ -174,7 +174,6 @@ fn main() {
                 }
             }
             None => {
-                println!("nothing");
                 break;
             }
         }
