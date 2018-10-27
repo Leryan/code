@@ -100,6 +100,7 @@ impl<R: Read> Parser<R> {
                     return Some(self.tok.clone());
                 }
                 self.s = State::StartTag;
+                self.tok.tag.clear();
             }
             _ => {}
         }
@@ -147,13 +148,16 @@ fn main() {
     let capacity = 128 * 1024;
     let file = File::open("sitemap.xml").unwrap();
     let bufr = BufReader::with_capacity(capacity, file);
-    let mut urls: Vec<Vec<u8>> = Vec::new();
+    let mut urls: Vec<String> = Vec::new();
     let mut parser = Parser::new(bufr);
 
     loop {
         match parser.parse() {
             Some(tok) => {
-                urls.push(tok.data);
+                let t = String::from_utf8(tok.tag).unwrap();
+                if t == "loc" {
+                    urls.push(String::from_utf8(tok.data).unwrap());
+                }
             }
             None => {
                 println!("nothing");
@@ -161,4 +165,6 @@ fn main() {
             }
         }
     }
+
+    println!("{} results", urls.len());
 }
