@@ -1,4 +1,6 @@
 __pycache__
 *.pyc
-saxparser-go
-sitemap.xml
+/sitemap.xml
+go/channel
+go/procedural
+go/encoding_xml
