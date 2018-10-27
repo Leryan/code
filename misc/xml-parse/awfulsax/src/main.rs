@@ -23,6 +23,7 @@ struct Parser<Read> {
     irn: usize,
     bvec: Vec<u8>,
     tok: Token,
+    bleft: u8,
 }
 
 enum State {
@@ -46,6 +47,7 @@ impl<R: Read> Parser<R> {
             irn: 0,
             bvec: bvec,
             tok: Token::new(),
+            bleft: 0,
         };
     }
 
@@ -65,6 +67,7 @@ impl<R: Read> Parser<R> {
     fn parse(&mut self) -> Option<Token> {
         loop {
             if self.irn == self.nread {
+                self.bleft = self.bvec[self.irn];
                 match self.read() {
                     Ok(0) => return None,
                     Err(e) => {
@@ -121,10 +124,21 @@ impl<R: Read> Parser<R> {
         }
     }
 
+    #[inline]
+    fn pullb(&mut self) -> u8 {
+        if self.bleft != 0 {
+            let r = self.bleft;
+            self.bleft = 0;
+            self.irn -= 1;
+            return r;
+        }
+        return self.bvec[self.irn - 1];
+    }
+
     fn parse_chunk(&mut self) -> Option<Token> {
         while self.irn < self.nread {
             self.irn += 1;
-            let b: u8 = self.bvec[self.irn - 1];
+            let b = self.pullb();
 
             match b {
                 b'<' => match self.parse_open() {
