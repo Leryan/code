@@ -21,7 +21,6 @@ struct Parser<Read> {
     s: State,
     nread: usize,
     irn: usize,
-    acc: Vec<u8>,
     bvec: Vec<u8>,
     tok: Token,
 }
@@ -45,7 +44,6 @@ impl<R: Read> Parser<R> {
             s: State::None,
             nread: 0,
             irn: 0,
-            acc: Vec::with_capacity(8192),
             bvec: bvec,
             tok: Token::new(),
         };
@@ -93,18 +91,15 @@ impl<R: Read> Parser<R> {
             State::None => {
                 if nb != b'/' {
                     self.s = State::StartTag;
-                    self.acc.clear();
+                    self.tok.tag.clear();
                 }
             }
             State::Data => {
                 if nb == b'/' {
                     self.s = State::EndTag;
-                    self.tok.data.clear();
-                    self.tok.data.append(&mut self.acc.clone());
                     return Some(self.tok.clone());
                 }
                 self.s = State::StartTag;
-                self.acc.clear();
             }
             _ => {}
         }
@@ -115,9 +110,8 @@ impl<R: Read> Parser<R> {
     fn parse_close(&mut self) {
         match self.s {
             State::StartTag => {
+                self.tok.data.clear();
                 self.s = State::Data;
-                self.tok.tag.clear();
-                self.tok.tag.append(&mut self.acc.drain(..).collect());
             }
             State::EndTag => {
                 self.s = State::None;
@@ -138,9 +132,8 @@ impl<R: Read> Parser<R> {
                 },
                 b'>' => self.parse_close(),
                 _ => match self.s {
-                    State::Data | State::StartTag => {
-                        self.acc.push(b);
-                    }
+                    State::Data => self.tok.data.push(b),
+                    State::StartTag => self.tok.tag.push(b),
                     _ => {}
                 },
             }
