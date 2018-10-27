@@ -51,22 +51,29 @@ impl<R: Read> Parser<R> {
         };
     }
 
+    fn read(&mut self) -> Result<usize, std::io::Error> {
+        let read = self.bufr.read(&mut self.bvec);
+        match read {
+            Ok(0) => Ok(0),
+            Ok(c) => {
+                self.irn = 0;
+                self.nread = c - 1;
+                Ok(self.nread)
+            }
+            Err(e) => Err(e),
+        }
+    }
+
     fn parse(&mut self) -> Option<Token> {
         loop {
             if self.irn == self.nread {
-                let read = self.bufr.read(&mut self.bvec);
-                match read {
-                    Ok(0) => {
-                        return None;
-                    }
-                    Ok(c) => {
-                        self.irn = 0;
-                        self.nread = c - 1;
-                    }
+                match self.read() {
+                    Ok(0) => return None,
                     Err(e) => {
-                        println!("err: {}", e);
+                        println!("{:?}", e);
                         return None;
                     }
+                    _ => {}
                 }
             }
 
@@ -110,8 +117,7 @@ impl<R: Read> Parser<R> {
             State::StartTag => {
                 self.s = State::Data;
                 self.tok.tag.clear();
-                self.tok.tag.append(&mut self.acc.clone());
-                self.acc.clear();
+                self.tok.tag.append(&mut self.acc.drain(..).collect());
             }
             State::EndTag => {
                 self.s = State::None;
