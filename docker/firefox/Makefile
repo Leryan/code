@@ -7,6 +7,9 @@ help:
 build:
 	docker build -t firefox:latest .
 
+clean:
+	rm -rf ${HOME_PATH}
+
 prepare:
 	mkdir -p ${HOME_PATH}
 
