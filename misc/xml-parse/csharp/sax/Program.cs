@@ -135,6 +135,7 @@ namespace sax
                 Console.WriteLine("no more data");
             }
 
+            Console.WriteLine("last loc: {0}", encoding.GetString(urls[urls.Count-1]));
             Console.WriteLine("{0} results", urls.Count);
         }
     }
