@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace sax
 {
 
     class Token {
-        public List<sbyte> tag;
-        public List<sbyte> data;
+        public List<byte> tag;
+        public List<byte> data;
 
         public Token() {
-            this.data = new List<sbyte>();
-            this.tag = new List<sbyte>();
+            this.data = new List<byte>();
+            this.tag = new List<byte>();
+        }
+
+        public override String ToString() {
+            var encoding = new UTF8Encoding();
+            return String.Format("{0}:{1}", encoding.GetString(this.tag.ToArray()), encoding.GetString(this.data.ToArray()));
         }
     }
 
@@ -19,39 +25,111 @@ namespace sax
 
     }
 
+    enum State {
+        None,
+        StartTag,
+        Data,
+        EndTag,
+    }
+
     class SaxParser {
 
-        private FileStream fs;
+        private BinaryReader reader;
         private byte[] buffr;
         private UInt64 ridx;
         private UInt64 rnr;
+        private State state;
+        private Token tok;
+        private byte leftover;
 
         public SaxParser(string filepath) {
-            this.fs = File.OpenRead(filepath);
-            this.buffr = new byte[8192];
+            var fs = File.OpenRead(filepath);
+            this.reader = new BinaryReader(fs);
             this.ridx = 0;
             this.rnr = 0;
+            this.state = State.None;
+            this.leftover = 0;
         }
 
         private void read() {
-            this.rnr = (ulong)this.fs.Read(this.buffr, 0, this.buffr.Length);
+            this.buffr = this.reader.ReadBytes(8192);
+            this.ridx = 0;
+            this.rnr = (ulong)this.buffr.Length;
             if (this.rnr == 0) {
                 throw new ParseEnd();
             }
+            this.rnr--;
+        }
+
+        private bool parse() {
+            while (this.ridx < this.rnr) {
+                this.ridx++;
+                byte b;
+                if (this.leftover == 0) {
+                    b = this.buffr[this.ridx-1];
+                } else {
+                    b = this.leftover;
+                    this.leftover = 0;
+                }
+
+                if (b == (byte)'<') {
+                    if (this.state == State.None) {
+                        this.state = State.StartTag;
+                    } else if (this.state == State.Data) {
+                        // <tag>data...</tag>
+                        if (this.buffr[this.ridx] == (byte)'/') {
+                            this.state = State.EndTag;
+                            return true;
+                        }
+                        // <tag><newtag>...
+                        this.state = State.StartTag;
+                        this.tok.tag.Clear();
+                    }
+                } else if (b == (byte)'>') {
+                    if (this.state == State.StartTag) {
+                        this.state = State.Data;
+                    } else if (this.state == State.EndTag) {
+                        this.state = State.None;
+                    }
+                } else if (this.state == State.Data) {
+                    this.tok.data.Add(b);
+                } else if (this.state == State.StartTag) {
+                    this.tok.tag.Add(b);
+                }
+            }
+
+            this.leftover = this.buffr[this.ridx];
+
+            return false;
         }
 
         public Token Parse() {
-            if (this.ridx == this.rnr) {
+            this.tok = new Token();
+            while(true) {
                 this.read();
+                if (this.parse()) {
+                    return this.tok;
+                }
+            }
+        }
+    }
+
+    class Appli {
+
+        public void Run() {
+            Console.WriteLine("start");
+            var parser = new SaxParser("sitemap.xml");
+            var urls = new List<byte[]>();
+            try {
+                while (true) {
+                    //Console.WriteLine(parser.Parse().ToString());
+                    urls.Add(parser.Parse().data.ToArray());
+                }
+            } catch (ParseEnd) {
+                Console.WriteLine("no more data");
             }
 
-            while (this.ridx < this.rnr) {
-                this.ridx++;
-            }
-
-            this.ridx = 0;
-            this.rnr = 0;
-            return new Token();
+            Console.WriteLine("{0} results", urls.Count);
         }
     }
 
@@ -59,15 +137,8 @@ namespace sax
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("start");
-            var parser = new SaxParser("sitemap.xml");
-            try {
-                while (true) {
-                    var tok = parser.Parse();
-                }
-            } catch (ParseEnd) {
-                Console.WriteLine("no more data");
-            }
+            var app = new Appli();
+            app.Run();
         }
     }
 }
