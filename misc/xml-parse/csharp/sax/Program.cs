@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace sax
 {
@@ -62,11 +63,11 @@ namespace sax
         }
 
         private bool parse() {
+            byte b;
             while (this.ridx < this.rnr) {
-                this.ridx++;
-                byte b;
                 if (this.leftover == 0) {
-                    b = this.buffr[this.ridx-1];
+                    b = this.buffr[this.ridx];
+                    this.ridx++;
                 } else {
                     b = this.leftover;
                     this.leftover = 0;
@@ -78,7 +79,7 @@ namespace sax
                     } else if (this.state == State.Data) {
                         // <tag>data...</tag>
                         if (this.buffr[this.ridx] == (byte)'/') {
-                            this.state = State.EndTag;
+                            this.state = State.None;
                             return true;
                         }
                         // <tag><newtag>...
@@ -88,8 +89,6 @@ namespace sax
                 } else if (b == (byte)'>') {
                     if (this.state == State.StartTag) {
                         this.state = State.Data;
-                    } else if (this.state == State.EndTag) {
-                        this.state = State.None;
                     }
                 } else if (this.state == State.Data) {
                     this.tok.data.Add(b);
@@ -106,7 +105,9 @@ namespace sax
         public Token Parse() {
             this.tok = new Token();
             while(true) {
-                this.read();
+                if (this.ridx == this.rnr) {
+                    this.read();
+                }
                 if (this.parse()) {
                     return this.tok;
                 }
@@ -120,10 +121,15 @@ namespace sax
             Console.WriteLine("start");
             var parser = new SaxParser("sitemap.xml");
             var urls = new List<byte[]>();
+            var encoding = new UTF8Encoding();
+            var locb = encoding.GetBytes("loc");
             try {
                 while (true) {
                     //Console.WriteLine(parser.Parse().ToString());
-                    urls.Add(parser.Parse().data.ToArray());
+                    var tok = parser.Parse();
+                    if (locb.SequenceEqual(tok.tag.ToArray())) {
+                        urls.Add(tok.data.ToArray());
+                    }
                 }
             } catch (ParseEnd) {
                 Console.WriteLine("no more data");
