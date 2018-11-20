@@ -28,17 +28,11 @@ class IterMulti:
         """
         :param iterators *args
         """
-        self._collections = args
-        self._cc = 0
-
+        self._collections = (x for x in args)
         self.__next_cit()
 
     def __next_cit(self):
-        try:
-            self._cit = (x for x in self._collections[self._cc])
-            self._cc += 1
-        except IndexError:
-            raise StopIteration
+        self._cit = (x for x in next(self._collections))
 
     def __iter__(self):
         return self
