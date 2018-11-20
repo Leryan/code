@@ -34,25 +34,22 @@ class IterMulti:
         self.__next_cit()
 
     def __next_cit(self):
-        self._cc += 1
         try:
-            self._cit = self._collections[self._cc - 1]
+            self._cit = (x for x in self._collections[self._cc])
+            self._cc += 1
         except IndexError:
             raise StopIteration
-        self._citi = 0
 
     def __iter__(self):
         return self
 
     def __next__(self):
         try:
-            v = self._cit[self._citi]
-            self._citi += 1
-            return v
-        except IndexError:
+            return next(self._cit)
+        except StopIteration:
             self.__next_cit()
-            return next(self)
+            return next(self._cit)
 
-i = IterMulti([0, 1], [2, 3], [4, 5, 6])
+i = IterMulti([0, 1], [2, 3], [4, 5, 6], (x for x in [7, 8, 9]))
 for b in i:
     print(b)
