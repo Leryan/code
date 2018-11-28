@@ -30,4 +30,7 @@ class Controller:
         except NoRemoteData:
             print('control => perfect, data was dropped')
 
-        self._b.complex_get('c1', 'c2', 'c3')
+        self._b.set_nocache('c1', 'C1')
+        self._b.set_nocache('c2', 'C2')
+        self._b.set_nocache('c3', 'C3')
+        print('control => complex get: {}'.format(self._b.complex_get('c1', 'c2', 'c3')))
