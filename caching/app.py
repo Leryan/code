@@ -26,7 +26,7 @@ class Controller:
         print('control => getting value back')
         try:
             value = self._b.get('myid')
-            print(f'control => got value: "{value}"')
+            print(f'control => got value but backend dropped it: "{value}"')
         except NoRemoteData:
             print('control => perfect, data was dropped')
 

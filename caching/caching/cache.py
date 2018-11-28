@@ -23,6 +23,12 @@ class Cache:
         except KeyError:
             pass
 
+class LRUCache(Cache):
+
+    @lru_cache(maxsize=128)
+    def get(self, identifier):
+        return super().get(identifier)
+
 def dec_get(func):
     def wrap(self, identifier):
         print('cache => execute cache')
