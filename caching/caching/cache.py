@@ -2,6 +2,17 @@ from functools import lru_cache
 
 from caching.exceptions import NoCacheData
 
+class NullCache:
+
+    def get(self, identifier):
+        raise NoCacheData(identifier)
+
+    def set(self, identifier, value):
+        pass
+
+    def drop(self, identifier):
+        pass
+
 class Cache:
 
     def __init__(self, serializer):
