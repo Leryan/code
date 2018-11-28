@@ -3,6 +3,10 @@ from functools import lru_cache
 from caching.exceptions import NoCacheData
 
 class NullCache:
+    """
+    For tests only, if cache isn't required, don't use a cache at all
+    in the first place.
+    """
 
     def get(self, identifier):
         raise NoCacheData(identifier)
@@ -36,9 +40,9 @@ class Cache:
 
 class LRUCache(Cache):
 
-    @lru_cache(maxsize=128)
-    def get(self, identifier):
-        return super().get(identifier)
+    def __init__(self, serializer, maxsize=128):
+        super().__init__(serializer)
+        self.get = lru_cache(maxsize=maxsize)(self.get)
 
 def dec_get(func):
     def wrap(self, identifier):
