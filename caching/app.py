@@ -30,3 +30,4 @@ class Controller:
         except NoRemoteData:
             print('control => perfect, data was dropped')
 
+        self._b.complex_get('c1', 'c2', 'c3')

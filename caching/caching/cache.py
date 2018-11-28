@@ -46,34 +46,43 @@ class LRUCache(Cache):
         super().__init__(serializer)
         self.get = lru_cache(maxsize=maxsize)(self.get)
 
-def dec_get(func):
-    def wrap(self, identifier):
-        print('cache => execute cache')
-        try:
-            rc = self._cache.get(identifier)
-            print('cache ==> got cached value')
-            return rc
-        except NoCacheData:
-            pass
-        print('cache ==> no cached value, asking remote')
-        rb = func(self, identifier)
-        print('cache ==> remote has value, caching')
-        self._cache.set(identifier, rb)
-        return rb
-    return wrap
+def dec_get(prepend_identifier='', build_identifier=lambda x, y: x+y):
+    def w(func):
+        def wrap(self, identifier, *args, **kwargs):
+            bi = build_identifier(prepend_identifier, identifier, *args, **kwargs)
+            print('cache => execute cache')
+            try:
+                rc = self._cache.get(bi)
+                print('cache ==> got cached value')
+                return rc
+            except NoCacheData:
+                pass
+            print('cache ==> no cached value, asking remote')
+            rb = func(self, identifier, *args, **kwargs)
+            print('cache ==> remote has value, caching')
+            self._cache.set(bi, rb)
+            return rb
+        return wrap
+    return w
 
-def dec_set(func):
-    def wrap(self, identifier, value):
-        r = func(self, identifier, value)
-        print('cache => set in remote ok, caching')
-        self._cache.set(identifier, value)
-        return r
-    return wrap
+def dec_set(prepend_identifier='', build_identifier=lambda x, y: x+y):
+    def w(func):
+        def wrap(self, identifier, value, *args, **kwargs):
+            r = func(self, identifier, value, *args, **kwargs)
+            print('cache => set in remote ok, caching')
+            bi = build_identifier(prepend_identifier, identifier, *args, **kwargs)
+            self._cache.set(bi, value)
+            return r
+        return wrap
+    return w
 
-def dec_drop(func):
-    def wrap(self, identifier):
-        print('cache => drop')
-        self._cache.drop(identifier)
-        print('cache => drop remote')
-        return func(self, identifier)
-    return wrap
+def dec_drop(prepend_identifier='', build_identifier=lambda x, y: x+y):
+    def w(func):
+        def wrap(self, identifier, *args, **kwargs):
+            print('cache => drop')
+            bi = build_identifier(prepend_identifier, identifier, *args, **kwargs)
+            self._cache.drop(bi)
+            print('cache => drop remote')
+            return func(self, identifier, *args, **kwargs)
+        return wrap
+    return w

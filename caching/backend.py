@@ -7,7 +7,7 @@ class Backend:
         self._store = store
         self._cache = cache
 
-    @cache.dec_get
+    @cache.dec_get()
     def get(self, identifier):
         try:
             print('backend => get?')
@@ -16,16 +16,18 @@ class Backend:
             print('backend ==> no data')
             raise NoRemoteData(identifier)
 
-    @cache.dec_set
+    @cache.dec_set()
     def set(self, identifier, value):
         self._store[identifier] = value
         print('backend => set')
 
-    @cache.dec_drop
+    @cache.dec_drop()
     def drop(self, identifier):
         try:
-            print('backend => dropped')
             del self._store[identifier]
         except KeyError:
             pass
+        print('backend => dropped')
 
+    def complex_get(self, crit1, crit2, crit3):
+        return self.get('{}{}{}'.format(crit1, crit2, crit3))
