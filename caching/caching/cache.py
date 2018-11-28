@@ -25,7 +25,9 @@ class Cache:
 
     def get(self, identifier):
         try:
-            return self._s.deserialize(identifier, self._cache[identifier])
+            r = self._s.deserialize(identifier, self._cache[identifier])
+            print('cache ===> fetched remote cache')
+            return r
         except KeyError:
             raise NoCacheData(identifier)
 
