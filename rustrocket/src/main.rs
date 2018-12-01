@@ -90,6 +90,8 @@ impl<'a> RocketChat<'a> {
     }
 
     fn login(&mut self) -> Result<(), Error> {
+        self.auth_token = None;
+
         let mut r = self.client
             .post(concat(self.root_url, "/api/v1/login").as_str())
             .json(&self.auth)
