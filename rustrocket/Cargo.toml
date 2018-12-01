@@ -1,0 +1,8 @@
+[package]
+name = "rocket"
+version = "0.1.0"
+authors = ["Florent Peterschmitt <florent@peterschmitt.fr>"]
+
+[dependencies]
+reqwest = "0.9.5"
+clap = "2"
