@@ -22,18 +22,19 @@ enum Error {
 
 impl From<reqwest::Error> for Error {
     fn from(error: reqwest::Error) -> Self {
+        let es = error.to_string();
         if error.is_serialization() {
-            Error::Data(error.to_string())
+            Error::Data(es)
         } else if error.is_server_error() {
-            Error::Remote(error.to_string())
+            Error::Remote(es)
         } else if error.is_http() {
-            Error::Client(error.to_string())
+            Error::Client(es)
         } else if error.is_redirect() {
-            Error::Client(error.to_string())
+            Error::Client(es)
         } else if error.is_client_error() {
-            Error::Client(error.to_string())
+            Error::Client(es)
         } else {
-            Error::Unexpected(error.to_string())
+            Error::Unexpected(es)
         }
     }
 }
