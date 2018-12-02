@@ -27,11 +27,11 @@ pub fn part1(input: &String) -> i64 {
 /// ```
 pub fn part2(input: &String) -> i64 {
     let mut acc: i64 = 0;
-    let mut freqs: HashSet<i64> = HashSet::new();
+    let mut freqs = HashSet::new();
     freqs.insert(acc);
     loop {
         for line in input.lines() {
-            let num = line.parse::<i64>().unwrap();
+            let num: i64 = line.parse().unwrap();
             acc += num;
             if freqs.contains(&acc) {
                 return acc;
