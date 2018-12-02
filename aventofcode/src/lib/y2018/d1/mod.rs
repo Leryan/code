@@ -28,24 +28,17 @@ pub fn part1(input: &String) -> i64 {
 pub fn part2(input: &String) -> i64 {
     let mut acc: i64 = 0;
     let mut freqs: HashSet<i64> = HashSet::new();
-    let mut rep: i64 = 0;
-    let mut found = false;
-
     freqs.insert(acc);
-    while !found {
+    loop {
         for line in input.lines() {
             let num = line.parse::<i64>().unwrap();
             acc += num;
             if freqs.contains(&acc) {
-                rep = acc;
-                found = true;
-                break;
+                return acc;
             }
             freqs.insert(acc);
         }
     }
-
-    rep
 }
 
 pub fn runner() {
