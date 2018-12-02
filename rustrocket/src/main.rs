@@ -51,15 +51,15 @@ impl RocketLogin {
         };
     }
 
-    fn auth_token(&self) -> Option<&String> {
-        if self.data.contains_key("authToken") {
-            match self.data["authToken"] {
-                Value::String(ref s) => return Some(s),
-                _ => return None,
-            };
+    fn auth_token(&self) -> Option<String> {
+        if !self.data.contains_key("authToken") {
+            return None;
         }
 
-        None
+        match self.data["authToken"] {
+            Value::String(ref s) => return Some(s.clone()),
+            _ => return None,
+        };
     }
 }
 
