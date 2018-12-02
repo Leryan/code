@@ -77,12 +77,18 @@ fn concat(left: &str, right: &str) -> String {
 }
 
 impl<'a> RocketChat<'a> {
-    fn new(root_url: &'a str, username: &'a str, password: &'a str) -> Self {
+    fn new(client: Option<reqwest::Client>, root_url: &'a str, username: &'a str, password: &'a str) -> Self {
         let mut auth = HashMap::new();
         auth.insert("user", username);
         auth.insert("password", password);
+
+        let client = match client {
+            Some(c) => c,
+            None => reqwest::Client::new(),
+        };
+
         return RocketChat{
-            client: reqwest::Client::new(),
+            client: client,
             auth: auth,
             root_url: root_url,
             auth_token: None,
@@ -135,6 +141,7 @@ fn main() {
         ).get_matches();
 
     let mut client = RocketChat::new(
+        None,
         args.value_of("url").unwrap(),
         args.value_of("user").unwrap(),
         args.value_of("password").unwrap(),
