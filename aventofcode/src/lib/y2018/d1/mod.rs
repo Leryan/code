@@ -45,6 +45,7 @@ pub fn runner() {
     let mut f = File::open("inputs/y2018/d1/input").unwrap();
     let mut input = String::new();
     f.read_to_string(&mut input).unwrap();
-    println!("part1: {:?}", part1(&input));
-    println!("part2: {:?}", part2(&input));
+    println!("---- day 01    ------");
+    println!(" * part 01: {:?}", part1(&input));
+    println!(" * part 02: {:?}", part2(&input));
 }

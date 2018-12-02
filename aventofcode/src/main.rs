@@ -1,7 +1,7 @@
 extern crate aoc;
 
-use aoc::y2018::d1;
+use aoc::y2018;
 
 fn main() {
-    d1::runner();
+    y2018::runner();
 }
