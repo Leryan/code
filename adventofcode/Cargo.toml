@@ -1,5 +1,5 @@
 [package]
-name = "avent-of-code"
+name = "advent-of-code"
 version = "0.1.0"
 authors = ["Florent Peterschmitt <florent@peterschmitt.fr>"]
 
