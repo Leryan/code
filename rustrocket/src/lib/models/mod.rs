@@ -13,6 +13,7 @@ pub struct Me {
 #[derive(Deserialize)]
 pub struct Login {
     pub data: Me,
+    pub status: String,
 }
 
 impl Login {

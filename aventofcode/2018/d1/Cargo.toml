@@ -1,0 +1,6 @@
+[package]
+name = "d1"
+version = "0.1.0"
+authors = ["Florent Peterschmitt <florent@peterschmitt.fr>"]
+
+[dependencies]
