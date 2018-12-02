@@ -1,9 +1,9 @@
-extern crate avent_of_code;
+extern crate aoc;
 
 use std::fs::File;
 use std::io::Read;
 
-use avent_of_code::y2018::d1::{part1, part2};
+use aoc::y2018::d1::{part1, part2};
 
 fn main() {
     let mut f = File::open("input").unwrap();

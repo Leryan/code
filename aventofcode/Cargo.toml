@@ -1,10 +1,10 @@
 [package]
-name = "d1"
+name = "avent-of-code"
 version = "0.1.0"
 authors = ["Florent Peterschmitt <florent@peterschmitt.fr>"]
 
 [lib]
-name = "avent_of_code"
+name = "aoc"
 path = "src/lib/lib.rs"
 
 [dependencies]

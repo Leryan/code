@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 /// ```
-/// use avent_of_code::y2018::d1::part1;
+/// use aoc::y2018::d1::part1;
 /// let mut input = String::new();
 /// input.push_str("+1\n");
 /// input.push_str("-1\n");
@@ -16,7 +16,7 @@ pub fn part1(input: &String) -> i64 {
 }
 
 /// ```
-/// use avent_of_code::y2018::d1::part2;
+/// use aoc::y2018::d1::part2;
 /// let mut input = String::new();
 /// input.push_str("+1\n");
 /// input.push_str("+2\n");
