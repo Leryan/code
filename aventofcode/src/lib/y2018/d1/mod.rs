@@ -1,4 +1,6 @@
 use std::collections::HashSet;
+use std::fs::File;
+use std::io::Read;
 
 /// ```
 /// use aoc::y2018::d1::part1;
@@ -44,4 +46,12 @@ pub fn part2(input: &String) -> i64 {
     }
 
     rep
+}
+
+pub fn runner() {
+    let mut f = File::open("inputs/y2018/d1/input").unwrap();
+    let mut input = String::new();
+    f.read_to_string(&mut input).unwrap();
+    println!("part1: {:?}", part1(&input));
+    println!("part2: {:?}", part2(&input));
 }
