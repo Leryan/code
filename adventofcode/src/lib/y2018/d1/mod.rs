@@ -29,11 +29,11 @@ pub fn part2(input: &String) -> i64 {
     let mut acc: i64 = 0;
     let mut freqs = HashSet::new();
     freqs.insert(acc);
+    let numbers: Vec<i64> = input.lines().map(
+        |line| line.parse::<i64>().unwrap()
+    ).collect();
     loop {
-        let numbers = input.lines().map(
-            |line| line.parse::<i64>().unwrap()
-        );
-        for num in numbers {
+        for num in &numbers {
             acc += num;
             if freqs.contains(&acc) {
                 return acc;
