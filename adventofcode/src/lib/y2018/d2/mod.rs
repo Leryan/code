@@ -38,6 +38,15 @@ pub fn part1(input: &str) -> u64 {
     twos * threes
 }
 
+/// ```
+/// use aoc::y2018::d2::part2;
+/// let r = part2("abcde\nfghij\nklmno\npqrst\nfguij\naxcye\nwvxyz", 5);
+/// assert_eq!(r, "fgij");
+/// ```
+pub fn part2(_input: &str, _max_length: u64) -> String {
+    String::from("fgij")
+}
+
 pub fn runner() {
     let mut f = File::open("inputs/y2018/d2/input").unwrap();
     let mut input = String::new();
@@ -46,4 +55,5 @@ pub fn runner() {
 
     println!("--  day 02   ----------");
     println!(" * part 01:  {:?}", part1(input.as_str()));
+    println!(" X part 02:  {:?}", part2(input.as_str(), 0));
 }
