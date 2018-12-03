@@ -3,5 +3,6 @@
 https://adventofcode.com
 
 ```
-cargo run --release
+cargo install cargo-watch
+./dev.sh
 ```
