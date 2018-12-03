@@ -65,7 +65,10 @@ impl FromStr for Claim {
 
 impl PartialEq for Claim {
     fn eq(&self, other: &Claim) -> bool {
-        self.x == other.x && self.y == other.y && self.w == other.w && self.h == other.h
+        self.x == other.x &&
+        self.y == other.y &&
+        self.w == other.w &&
+        self.h == other.h
     }
 }
 
