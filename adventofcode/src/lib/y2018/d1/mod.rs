@@ -46,7 +46,7 @@ pub fn runner() {
         |line| line.parse().unwrap()
     ).collect();
 
-    println!("---- day 01    ------");
-    println!(" * part 01: {:?}", part1(&numbers));
-    println!(" * part 02: {:?}", part2(&numbers));
+    println!("--  day 01   ----------");
+    println!(" * part 01:  {:?}", part1(&numbers));
+    println!(" * part 02:  {:?}", part2(&numbers));
 }
