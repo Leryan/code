@@ -4,38 +4,30 @@ use std::io::Read;
 
 /// ```
 /// use aoc::y2018::d1::part1;
-/// let mut input = String::new();
-/// input.push_str("+1\n");
-/// input.push_str("-1\n");
-/// assert_eq!(part1(&input), 0);
+/// let numbers = vec![1, -2, 2];
+/// assert_eq!(part1(&numbers), 1);
 /// ```
-pub fn part1(input: &String) -> i64 {
+pub fn part1(numbers: &Vec<i64>) -> i64 {
     let mut acc: i64 = 0;
-    for line in input.lines() {
-        acc += line.parse::<i64>().unwrap();
+    for num in numbers {
+        acc += num;
     }
     acc
 }
 
 /// ```
 /// use aoc::y2018::d1::part2;
-/// let mut input = String::new();
-/// input.push_str("+1\n");
-/// input.push_str("+2\n");
-/// input.push_str("-5\n");
-/// assert_eq!(part2(&input), 1);
+/// let numbers = vec![1, 2, -5];
+/// assert_eq!(part2(&numbers), 1);
 /// ```
-pub fn part2(input: &String) -> i64 {
+pub fn part2(numbers: &Vec<i64>) -> i64 {
     let mut acc: i64 = 0;
     let mut freqs = HashSet::new();
-    let numbers: Vec<i64> = input.lines().map(
-        |line| line.parse().unwrap()
-    ).collect();
 
     freqs.insert(acc);
 
     loop {
-        for num in &numbers {
+        for num in numbers {
             acc += num;
             if freqs.contains(&acc) {
                 return acc;
@@ -49,7 +41,12 @@ pub fn runner() {
     let mut f = File::open("inputs/y2018/d1/input").unwrap();
     let mut input = String::new();
     f.read_to_string(&mut input).unwrap();
+
+    let numbers: Vec<i64> = input.lines().map(
+        |line| line.parse().unwrap()
+    ).collect();
+
     println!("---- day 01    ------");
-    println!(" * part 01: {:?}", part1(&input));
-    println!(" * part 02: {:?}", part2(&input));
+    println!(" * part 01: {:?}", part1(&numbers));
+    println!(" * part 02: {:?}", part2(&numbers));
 }
