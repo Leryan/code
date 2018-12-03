@@ -28,10 +28,12 @@ pub fn part1(input: &String) -> i64 {
 pub fn part2(input: &String) -> i64 {
     let mut acc: i64 = 0;
     let mut freqs = HashSet::new();
-    freqs.insert(acc);
     let numbers: Vec<i64> = input.lines().map(
         |line| line.parse().unwrap()
     ).collect();
+
+    freqs.insert(acc);
+
     loop {
         for num in &numbers {
             acc += num;
