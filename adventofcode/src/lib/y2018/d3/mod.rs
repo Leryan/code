@@ -34,10 +34,7 @@ impl FromStr for Claim {
     ///     w: 4,
     ///     h: 5,
     /// };
-    /// assert_eq!(claim.x, ref_claim.x);
-    /// assert_eq!(claim.y, ref_claim.y);
-    /// assert_eq!(claim.w, ref_claim.w);
-    /// assert_eq!(claim.h, ref_claim.h);
+    /// assert_eq!(claim, ref_claim);
     /// ```
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let cleaned = s.replace(":", "");
@@ -66,7 +63,13 @@ impl FromStr for Claim {
     }
 }
 
-pub fn part1(claims: &Vec<Claim>) -> u64 {
+impl PartialEq for Claim {
+    fn eq(&self, other: &Claim) -> bool {
+        self.x == other.x && self.y == other.y && self.w == other.w && self.h == other.h
+    }
+}
+
+pub fn part1(_claims: &Vec<Claim>) -> u64 {
     0
 }
 
