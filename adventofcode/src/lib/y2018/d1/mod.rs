@@ -30,7 +30,7 @@ pub fn part2(input: &String) -> i64 {
     let mut freqs = HashSet::new();
     freqs.insert(acc);
     let numbers: Vec<i64> = input.lines().map(
-        |line| line.parse::<i64>().unwrap()
+        |line| line.parse().unwrap()
     ).collect();
     loop {
         for num in &numbers {
