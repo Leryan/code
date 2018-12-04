@@ -2,6 +2,8 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
 
+use utils::check_and_print;
+
 /// ```
 /// use aoc::y2018::d2::part1;
 /// let r = part1("abcdef\nbababc\nabbcde\nabcccd\naabcdd\nabcdee\nababab\n");
@@ -54,6 +56,6 @@ pub fn runner() {
     input.push('\n');
 
     println!("--  day 02   ----------");
-    println!(" * part 01:  {:?}", part1(input.as_str()));
-    println!(" X part 02:  {:?}", part2(input.as_str(), 0));
+    check_and_print(1, part1(input.as_str()), Some(7163));
+    check_and_print(2, part2(input.as_str(), 0), None);
 }

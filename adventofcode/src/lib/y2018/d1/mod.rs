@@ -2,6 +2,8 @@ use std::collections::HashSet;
 use std::fs::File;
 use std::io::Read;
 
+use utils::check_and_print;
+
 /// ```
 /// use aoc::y2018::d1::part1;
 /// let numbers = vec![1, -2, 2];
@@ -47,6 +49,6 @@ pub fn runner() {
     ).collect();
 
     println!("--  day 01   ----------");
-    println!(" * part 01:  {:?}", part1(&numbers));
-    println!(" * part 02:  {:?}", part2(&numbers));
+    check_and_print(1, part1(&numbers), Some(553));
+    check_and_print(2, part2(&numbers), Some(78724));
 }

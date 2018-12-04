@@ -4,6 +4,8 @@ use std::str::FromStr;
 use std::collections::HashSet;
 use std::hash::{Hash, Hasher};
 
+use utils::check_and_print;
+
 #[derive(Debug)]
 pub enum Error {
     ParseClaim(String),
@@ -180,6 +182,18 @@ impl Fabric {
 
         return true;
     }
+
+    pub fn find_clear_claim_id(&mut self, claims: &Vec<Claim>) -> Option<u64> {
+        let mut id: u64 = 0;
+        for claim in claims {
+            if self.clear_surface(&claim) {
+                return Some(id + 1);
+            }
+            id += 1;
+        }
+
+        None
+    }
 }
 
 pub fn runner() {
@@ -199,14 +213,6 @@ pub fn runner() {
     }
 
     println!("--  day 03   ----------");
-    println!(" * part 01:  {:?}", fabric.overlap_surface());
-
-    let mut id: u64 = 0;
-    for claim in claims {
-        if fabric.clear_surface(&claim) {
-            println!(" * part 02:  {:?}", id + 1);
-            break;
-        }
-        id += 1;
-    }
+    check_and_print(1, fabric.overlap_surface(), Some(105231));
+    check_and_print(2, fabric.find_clear_claim_id(&claims).unwrap(), Some(164));
 }
