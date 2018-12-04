@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::Read;
 use std::str::FromStr;
-use std::collections::HashSet;
+use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 
 use utils::check_and_print;
@@ -78,7 +78,6 @@ impl PartialEq for Claim {
 
 #[derive(Copy, Clone)]
 pub enum Occupied {
-    None,
     Once,
     Overlap,
 }
@@ -86,13 +85,12 @@ pub enum Occupied {
 pub struct FabricPoint {
     x: u64,
     y: u64,
-    occupied: Occupied,
 }
 
 impl PartialEq for FabricPoint {
     fn eq(&self, other: &FabricPoint) -> bool {
         self.x == other.x &&
-            self.y == other.y
+        self.y == other.y
     }
 }
 
@@ -107,13 +105,13 @@ impl Hash for FabricPoint {
 }
 
 pub struct Fabric {
-    fab: HashSet<FabricPoint>,
+    fab: HashMap<FabricPoint, Occupied>,
 }
 
 impl Fabric {
     pub fn new() -> Self {
         Fabric{
-            fab: HashSet::new(),
+            fab: HashMap::new(),
         }
     }
 
@@ -123,35 +121,19 @@ impl Fabric {
                 let fp = FabricPoint{
                     x: x,
                     y: y,
-                    occupied: Occupied::Once,
                 };
 
-                let mut fabfp = self.fab.take(&fp);
-                match fabfp {
-                    None => {
-                        self.fab.insert(fp);
-                    },
-                    Some(ffp) => {
-                        let mut nfabfp = FabricPoint{
-                            x: ffp.x,
-                            y: ffp.y,
-                            occupied: ffp.occupied,
-                        };
-                        match ffp.occupied {
-                            Occupied::None => nfabfp.occupied = Occupied::Once,
-                            Occupied::Once => nfabfp.occupied = Occupied::Overlap,
-                            _ => {},
-                        }
-                        self.fab.insert(nfabfp);
-                    },
-                }
+                self.fab.entry(fp).and_modify(
+                    |occupied|
+                    *occupied = Occupied::Overlap
+                ).or_insert(Occupied::Once);
             }
         }
     }
 
     pub fn overlap_surface(&self) -> u64 {
         self.fab.iter().filter(
-            |fp| match fp.occupied {
+            |(_, occupied)| match occupied {
                 Occupied::Overlap => true,
                 _ => false,
             }
@@ -164,13 +146,12 @@ impl Fabric {
                 let fp = FabricPoint{
                     x: x,
                     y: y,
-                    occupied: Occupied::None,
                 };
 
-                let mut fabfp = self.fab.take(&fp);
+                let mut fabfp = self.fab.get_mut(&fp);
                 match fabfp {
-                    Some(f) => {
-                        match f.occupied {
+                    Some(occupied) => {
+                        match occupied {
                             Occupied::Overlap => return false,
                             _ => {},
                         }
