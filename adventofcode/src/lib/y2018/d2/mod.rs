@@ -20,20 +20,28 @@ pub fn part1(input: &str) -> u64 {
             '\n' => {
                 for v in count.values() {
                     match v {
-                        2 => if !btwos { twos += 1; btwos = true; },
-                        3 => if !bthrees { threes += 1; bthrees = true; },
-                        _ => {},
+                        2 => {
+                            if !btwos {
+                                twos += 1;
+                                btwos = true;
+                            }
+                        }
+                        3 => {
+                            if !bthrees {
+                                threes += 1;
+                                bthrees = true;
+                            }
+                        }
+                        _ => {}
                     }
                 }
                 count.clear();
                 btwos = false;
                 bthrees = false;
-            },
+            }
             _ => {
-                count.entry(letter)
-                    .and_modify(|c| *c += 1)
-                    .or_insert(1);
-            },
+                count.entry(letter).and_modify(|c| *c += 1).or_insert(1);
+            }
         }
     }
 

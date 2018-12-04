@@ -58,7 +58,7 @@ impl FromStr for Claim {
             return Err(Error::ParseClaim(String::from("bad dimensions")));
         }
 
-        Ok(Claim{
+        Ok(Claim {
             x: position[0].parse()?,
             y: position[1].parse()?,
             w: dimensions[0].parse()?,
@@ -69,10 +69,7 @@ impl FromStr for Claim {
 
 impl PartialEq for Claim {
     fn eq(&self, other: &Claim) -> bool {
-        self.x == other.x &&
-            self.y == other.y &&
-            self.w == other.w &&
-            self.h == other.h
+        self.x == other.x && self.y == other.y && self.w == other.w && self.h == other.h
     }
 }
 
@@ -89,13 +86,11 @@ pub struct FabricPoint {
 
 impl PartialEq for FabricPoint {
     fn eq(&self, other: &FabricPoint) -> bool {
-        self.x == other.x &&
-        self.y == other.y
+        self.x == other.x && self.y == other.y
     }
 }
 
-impl Eq for FabricPoint {
-}
+impl Eq for FabricPoint {}
 
 impl Hash for FabricPoint {
     fn hash<H: Hasher>(&self, state: &mut H) {
@@ -110,53 +105,46 @@ pub struct Fabric {
 
 impl Fabric {
     pub fn new() -> Self {
-        Fabric{
-            fab: HashMap::new(),
-        }
+        Fabric { fab: HashMap::new() }
     }
 
     pub fn push(&mut self, claim: &Claim) {
-        for x in claim.x..claim.x+claim.w {
-            for y in claim.y..claim.y+claim.h {
-                let fp = FabricPoint{
-                    x: x,
-                    y: y,
-                };
+        for x in claim.x..claim.x + claim.w {
+            for y in claim.y..claim.y + claim.h {
+                let fp = FabricPoint { x: x, y: y };
 
-                self.fab.entry(fp).and_modify(
-                    |occupied|
-                    *occupied = Occupied::Overlap
-                ).or_insert(Occupied::Once);
+                self.fab
+                    .entry(fp)
+                    .and_modify(|occupied| *occupied = Occupied::Overlap)
+                    .or_insert(Occupied::Once);
             }
         }
     }
 
     pub fn overlap_surface(&self) -> u64 {
-        self.fab.iter().filter(
-            |(_, occupied)| match occupied {
+        self.fab
+            .iter()
+            .filter(|(_, occupied)| match occupied {
                 Occupied::Overlap => true,
                 _ => false,
-            }
-        ).count() as u64
+            })
+            .count() as u64
     }
 
     pub fn clear_surface(&mut self, claim: &Claim) -> bool {
-        for x in claim.x..claim.x+claim.w {
-            for y in claim.y..claim.y+claim.h {
-                let fp = FabricPoint{
-                    x: x,
-                    y: y,
-                };
+        for x in claim.x..claim.x + claim.w {
+            for y in claim.y..claim.y + claim.h {
+                let fp = FabricPoint { x: x, y: y };
 
                 let mut fabfp = self.fab.get_mut(&fp);
                 match fabfp {
                     Some(occupied) => {
                         match occupied {
                             Occupied::Overlap => return false,
-                            _ => {},
+                            _ => {}
                         }
-                    },
-                    _ => {},
+                    }
+                    _ => {}
                 }
             }
         }

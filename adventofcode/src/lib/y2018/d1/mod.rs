@@ -44,9 +44,7 @@ pub fn runner() {
     let mut input = String::new();
     f.read_to_string(&mut input).unwrap();
 
-    let numbers: Vec<i64> = input.lines().map(
-        |line| line.parse().unwrap()
-    ).collect();
+    let numbers: Vec<i64> = input.lines().map(|line| line.parse().unwrap()).collect();
 
     println!("--  day 01   ----------");
     check_and_print(1, part1(&numbers), Some(553));
