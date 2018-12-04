@@ -73,7 +73,6 @@ impl PartialEq for Claim {
     }
 }
 
-#[derive(Copy, Clone)]
 pub enum Occupied {
     Once,
     Overlap,
