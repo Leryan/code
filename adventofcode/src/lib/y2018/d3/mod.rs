@@ -136,15 +136,15 @@ impl Fabric {
             for y in claim.y..claim.y + claim.h {
                 let fp = FabricPoint { x: x, y: y };
 
-                let mut fabfp = self.fab.get_mut(&fp);
-                match fabfp {
-                    Some(occupied) => {
-                        match occupied {
-                            Occupied::Overlap => return false,
-                            _ => {}
-                        }
-                    }
-                    _ => {}
+                if self.fab
+                    .get_mut(&fp)
+                    .filter(|occupied| match occupied {
+                        Occupied::Overlap => true,
+                        _ => false,
+                    })
+                    .is_some()
+                {
+                    return false;
                 }
             }
         }
