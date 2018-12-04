@@ -155,6 +155,31 @@ impl Fabric {
             }
         ).count() as u64
     }
+
+    pub fn clear_surface(&mut self, claim: &Claim) -> bool {
+        for x in claim.x..claim.x+claim.w {
+            for y in claim.y..claim.y+claim.h {
+                let fp = FabricPoint{
+                    x: x,
+                    y: y,
+                    occupied: Occupied::None,
+                };
+
+                let mut fabfp = self.fab.take(&fp);
+                match fabfp {
+                    Some(f) => {
+                        match f.occupied {
+                            Occupied::Overlap => return false,
+                            _ => {},
+                        }
+                    },
+                    _ => {},
+                }
+            }
+        }
+
+        return true;
+    }
 }
 
 pub fn runner() {
@@ -163,11 +188,25 @@ pub fn runner() {
     f.read_to_string(&mut input).unwrap();
 
     let mut fabric = Fabric::new();
+    let mut claims: Vec<Claim> = Vec::new();
 
     for claim in input.lines() {
-        fabric.push(&claim.parse().unwrap());
+        claims.push(claim.parse().unwrap());
+    }
+
+    for claim in &claims {
+        fabric.push(&claim);
     }
 
     println!("--  day 03   ----------");
     println!(" * part 01:  {:?}", fabric.overlap_surface());
+
+    let mut id: u64 = 0;
+    for claim in claims {
+        if fabric.clear_surface(&claim) {
+            println!(" * part 02:  {:?}", id + 1);
+            break;
+        }
+        id += 1;
+    }
 }
