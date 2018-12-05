@@ -1,8 +1,11 @@
 use std::fs::File;
+use std::fmt::Debug;
 use std::io::Read;
 use std::str::FromStr;
 use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
+use std::ops::Add;
+use std::iter::Step;
 
 use utils::check_and_print;
 
@@ -18,14 +21,19 @@ impl From<std::num::ParseIntError> for Error {
 }
 
 #[derive(Debug)]
-pub struct Claim {
-    pub x: u64,
-    pub y: u64,
-    pub w: u64,
-    pub h: u64,
+pub struct FabricPoint<T: Add + Step + Debug> {
+    x: T,
+    y: T,
 }
 
-impl FromStr for Claim {
+#[derive(Debug)]
+pub struct Claim<T: Add + Step + Debug> {
+    pub p: FabricPoint<T>,
+    pub w: T,
+    pub h: T,
+}
+
+impl<T: FromStr + Add + Step + Debug> FromStr for Claim<T> {
     type Err = Error;
 
     /// ```
@@ -59,17 +67,22 @@ impl FromStr for Claim {
         }
 
         Ok(Claim {
-            x: position[0].parse()?,
-            y: position[1].parse()?,
-            w: dimensions[0].parse()?,
-            h: dimensions[1].parse()?,
+            p: FabricPoint {
+                x: position[0].parse().unwrap(),
+                y: position[1].parse().unwrap(),
+            },
+            w: dimensions[0].parse().unwrap(),
+            h: dimensions[1].parse().unwrap(),
         })
     }
 }
 
-impl PartialEq for Claim {
-    fn eq(&self, other: &Claim) -> bool {
-        self.x == other.x && self.y == other.y && self.w == other.w && self.h == other.h
+impl<T: PartialEq + Add + Step + Debug> PartialEq for Claim<T> {
+    fn eq(&self, other: &Claim<T>) -> bool {
+        self.p.x == other.p.x &&
+        self.p.y == other.p.y &&
+        self.w == other.w &&
+        self.h == other.h
     }
 }
 
@@ -78,38 +91,34 @@ pub enum Occupied {
     Overlap,
 }
 
-pub struct FabricPoint {
-    x: u64,
-    y: u64,
-}
 
-impl PartialEq for FabricPoint {
-    fn eq(&self, other: &FabricPoint) -> bool {
+impl<T: PartialEq + Add + Step + Debug> PartialEq for FabricPoint<T> {
+    fn eq(&self, other: &FabricPoint<T>) -> bool {
         self.x == other.x && self.y == other.y
     }
 }
 
-impl Eq for FabricPoint {}
+impl<T: Eq + Add + Step + Debug> Eq for FabricPoint<T> {}
 
-impl Hash for FabricPoint {
+impl<T: Hash + Add + Step + Debug> Hash for FabricPoint<T> {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.x.hash(state);
         self.y.hash(state);
     }
 }
 
-pub struct Fabric {
-    fab: HashMap<FabricPoint, Occupied>,
+pub struct Fabric<T: Add + Step + Debug> {
+    fab: HashMap<FabricPoint<T>, Occupied>,
 }
 
-impl Fabric {
+impl<T: Hash + PartialEq + Eq + Add + Step + Debug> Fabric<T> {
     pub fn new() -> Self {
         Fabric { fab: HashMap::new() }
     }
 
-    pub fn push(&mut self, claim: &Claim) {
-        for x in claim.x..claim.x + claim.w {
-            for y in claim.y..claim.y + claim.h {
+    pub fn push(&mut self, claim: &Claim<T>) {
+        for x in claim.p.x..claim.p.x + claim.w {
+            for y in claim.p.y..(claim.p.y + claim.h) {
                 let fp = FabricPoint { x: x, y: y };
 
                 self.fab
@@ -130,9 +139,9 @@ impl Fabric {
             .count() as u64
     }
 
-    pub fn clear_surface(&mut self, claim: &Claim) -> bool {
-        for x in claim.x..claim.x + claim.w {
-            for y in claim.y..claim.y + claim.h {
+    pub fn clear_surface(&mut self, claim: &Claim<T>) -> bool {
+        for x in claim.p.x..claim.p.x + claim.w {
+            for y in claim.p.y..claim.p.y + claim.h {
                 let fp = FabricPoint { x: x, y: y };
 
                 if self.fab
@@ -151,7 +160,7 @@ impl Fabric {
         return true;
     }
 
-    pub fn find_clear_claim_id(&mut self, claims: &Vec<Claim>) -> Option<u64> {
+    pub fn find_clear_claim_id(&mut self, claims: &Vec<Claim<T>>) -> Option<u64> {
         let mut id: u64 = 0;
         for claim in claims {
             if self.clear_surface(&claim) {
@@ -170,7 +179,7 @@ pub fn runner() {
     f.read_to_string(&mut input).unwrap();
 
     let mut fabric = Fabric::new();
-    let mut claims: Vec<Claim> = Vec::new();
+    let mut claims: Vec<Claim<u64>> = Vec::new();
 
     for claim in input.lines() {
         claims.push(claim.parse().unwrap());
