@@ -3,7 +3,7 @@ def err_msg(obj, method_name):
 
 
 class Visitor:
-    def visitID(self, pk):
+    def visitID(self, id_):
         raise NotImplementedError(err_msg(self, 'visitID'))
 
     def visitEstimations(self, estimations):

@@ -9,7 +9,7 @@ def main():
 
     backend = django.Backend()
     dm = backend.fetch_model(10)
-    visitor = visitors.ToDictSerializer()
+    visitor = visitors.ElasticSearchSerializer()
     dm.accept(visitor)
 
     print(visitor.serialized)
