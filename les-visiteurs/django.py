@@ -1,16 +1,16 @@
-from typing import List
+from typing import List, DefaultDict
 from collections import defaultdict
 
-from mtypes import ID, Estimations, Data
+from mtypes import TID, TEstimations, TData
 from base import Acceptor, Visitor
 import backends
 
 
 class PK(Acceptor):
 
-    id_: ID
+    id_: TID
 
-    def __init__(self, id_: ID):
+    def __init__(self, id_: TID):
         self.id_ = id_
 
     def accept(self, visitor: Visitor):
@@ -19,9 +19,9 @@ class PK(Acceptor):
 
 class Estimations(Acceptor):
 
-    estimations: Estimations
+    estimations: TEstimations
 
-    def __init__(self, estimations: Estimations):
+    def __init__(self, estimations: TEstimations):
         self.estimations = estimations
 
     def accept(self, visitor: Visitor):
@@ -81,7 +81,7 @@ class ToDictSerializer(Visitor):
         self._dict['estimations'] = mEstimations.estimations
 
     def visitProduct(self, mProduct: Product):
-        dl = defaultdict(list)
+        dl: DefaultDict[str, TData] = defaultdict(list)
         for mpd in mProduct.data:
             dl[mpd.key].append(mpd.data)
 
@@ -89,7 +89,7 @@ class ToDictSerializer(Visitor):
 
 
 class Backend(backends.Base):
-    def fetch_model(self, id_: ID) -> Model:
+    def fetch_model(self, id_: TID) -> Model:
         pk = PK(id_)
         ests = list(range(0 + id_, 5 + id_))
         estimations = Estimations(ests)

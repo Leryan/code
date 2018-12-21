@@ -1,5 +1,5 @@
 from typing import List
 
-ID = int
-Estimations = List[int]
-Data = List[str]
+TID = int
+TEstimations = List[int]
+TData = List[str]

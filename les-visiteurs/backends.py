@@ -1,6 +1,7 @@
-from mtypes import ID
+from mtypes import TID
+from base import err_msg
 
 
 class Base:
-    def fetch_model(self, id_: ID):
-        raise NotImplementedError(f'missing {self.__class__}.fetch_model implementation')
+    def fetch_model(self, id_: TID):
+        raise NotImplementedError(err_msg(self, 'fetch_model'))
