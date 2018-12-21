@@ -37,6 +37,9 @@ class Data(Acceptor):
         self.key = key
         self.data = data
 
+    def accept(self, visitor: Visitor):
+        visitor.visitData(self)
+
 
 class Product(Acceptor):
 
@@ -73,6 +76,7 @@ class ToDictSerializer(Visitor):
 
     def __init__(self):
         self._dict = {}
+        self._pddl: DefaultDict[str, TData] = defaultdict(list)
 
     def visitID(self, mID: PK):
         self._dict['id'] = mID.id_
@@ -81,11 +85,13 @@ class ToDictSerializer(Visitor):
         self._dict['estimations'] = mEstimations.estimations
 
     def visitProduct(self, mProduct: Product):
-        dl: DefaultDict[str, TData] = defaultdict(list)
         for mpd in mProduct.data:
-            dl[mpd.key].append(mpd.data)
+            mpd.accept(self)
 
-        self._dict['product__data'] = dict(dl)
+        self._dict['product__data'] = dict(self._pddl)
+
+    def visitData(self, mData: Data):
+        self._pddl[mData.key].append(mData.data)
 
 
 class Backend(backends.Base):

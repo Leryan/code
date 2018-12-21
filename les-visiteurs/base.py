@@ -1,5 +1,5 @@
 def err_msg(obj, method_name):
-    return f'missing {self.__class__.__name__}.{method_name} implementation'
+    return f'missing {obj.__class__.__name__}.{method_name} implementation'
 
 
 class Visitor:
@@ -11,6 +11,9 @@ class Visitor:
 
     def visitProduct(self, product):
         raise NotImplementedError(err_msg(self, 'visitProduct'))
+
+    def visitData(self, data):
+        raise NotImplementedError(err_msg(self, 'visitData'))
 
 
 class Acceptor:
