@@ -2,13 +2,14 @@
 
 
 import django
+import visitors
 
 
 def main():
 
     backend = django.Backend()
     dm = backend.fetch_model(10)
-    visitor = django.ToDictSerializer()
+    visitor = visitors.ToDictSerializer()
     dm.accept(visitor)
 
     print(visitor.serialized)
