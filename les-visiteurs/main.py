@@ -1,20 +1,17 @@
 #!/usr/bin/env python
 
 
-from django import *
-from backends import Django
-from serializers import ToDict
+import django
 
 
 def main():
 
-    backend = Django()
+    backend = django.Backend()
     dm = backend.fetch_model(10)
-    serializer = ToDict()
-    visitor = DjangoVisitor(serializer)
+    visitor = django.ToDictVisitor()
     dm.accept(visitor)
 
-    print(serializer.serialized)
+    print(visitor.serialized)
 
 
 if __name__ == '__main__':
