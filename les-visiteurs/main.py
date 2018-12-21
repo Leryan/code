@@ -8,7 +8,7 @@ def main():
 
     backend = django.Backend()
     dm = backend.fetch_model(10)
-    visitor = django.ToDictVisitor()
+    visitor = django.ToDictSerializer()
     dm.accept(visitor)
 
     print(visitor.serialized)

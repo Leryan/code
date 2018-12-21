@@ -66,7 +66,7 @@ class Model(Acceptor):
         self.product.accept(visitor)
 
 
-class ToDictVisitor(Visitor):
+class ToDictSerializer(Visitor):
     @property
     def serialized(self):
         return self._dict
