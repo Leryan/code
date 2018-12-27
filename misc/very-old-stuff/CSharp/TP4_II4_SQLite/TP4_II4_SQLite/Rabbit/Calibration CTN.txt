@@ -1,0 +1,7 @@
+
+	T=0.395*V-25.8
+	
+		avec T en dégrés Celcius
+		et V la valeur Numerique Acquise
+
+	

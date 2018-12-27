@@ -1,0 +1,29 @@
+#!/bin/sh
+#
+# $FreeBSD: ports/sysutils/fusefs-kmod/files/fusefs.in,v 1.8 2010/03/27 00:14:55 dougb Exp $
+#
+# REQUIRE: camcontrol
+# PROVIDE: spinup
+#
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+# spinup_enable (bool):		Set to NO by default.
+#				Set it to YES to enable fusefs.
+
+. /etc/rc.subr
+
+name="spinup"
+rcvar=`set_rcvar`
+
+start_cmd="spinup_start"
+
+spinup_start()
+{
+	camcontrol cmd ada0 -a "EF 85 00 00 00 00 00 00 00 00 00 00"
+	echo "Spinup on ada0"
+}
+
+load_rc_config $name
+
+
+run_rc_command "$1"

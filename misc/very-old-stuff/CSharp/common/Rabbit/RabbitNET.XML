@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RabbitNET</name>
+    </assembly>
+    <members>
+        <member name="T:RabbitNET.Rabbit">
+            <summary>
+            Cette classe apporte l'ensemble des éléments permettant une communication avec
+            les équipements Rabbits du GEII Nancy (y compris l'émulateur)
+            </summary>
+        </member>
+        <member name="M:RabbitNET.Rabbit.Acquisition_Synchrone">
+            <summary>
+            Lance une opération de lecture en mode bloquant 
+            </summary>
+        </member>
+        <member name="M:RabbitNET.Rabbit.DemandeAcquisition_Asynchone">
+            <summary>
+            Lance une demande de lecture qui sera confirmée par la suite via l'évenement ConfirmationAcquisition
+            </summary>
+        </member>
+        <member name="M:RabbitNET.Rabbit.Ecriture_Synchrone">
+            <summary>
+            Lance une opération d'écriture en mode bloquant 
+            </summary>
+        </member>
+        <member name="M:RabbitNET.Rabbit.DemandeEcriture_Asynchone">
+            <summary>
+            Lance une demande d'écriture qui sera confirmée par la suite via l'évenement ConfirmationEcriture
+            </summary>
+        </member>
+        <member name="E:RabbitNET.Rabbit.ConfirmationEcriture">
+            <summary>
+            Evénement généré à la suite d'une Demande d'écriture Asynchrone
+            si AsyncCompletedEventArgs e.Error est != de null cela signifie que ca c'est mal passé
+            </summary>
+        </member>
+        <member name="E:RabbitNET.Rabbit.ConfirmationAcquisition">
+            <summary>
+            Evénement généré à la suite d'une demande de lecture Asynchrone
+            si AsyncCompletedEventArgs e.Error est != de null cela signifie que ca c'est mal passé
+            </summary>
+        </member>
+        <member name="P:RabbitNET.Rabbit.Temperature">
+            <summary>
+            La Temperature
+            </summary>
+        </member>
+        <member name="P:RabbitNET.Rabbit.Lumiere">
+            <summary>
+            La Lumiere
+            </summary>
+        </member>
+        <member name="P:RabbitNET.Rabbit.EANA2">
+            <summary>
+            Entree Analogique, sans doute un potentiomètre
+            </summary>
+        </member>
+        <member name="P:RabbitNET.Rabbit.EANA3">
+            <summary>
+            Entree Analogique, en principe bouclée physiquement sur la sortie Analogique
+            </summary>
+        </member>
+        <member name="P:RabbitNET.Rabbit.ETOR">
+            <summary>
+            Entrees tout ou rien (Bouttons poussoirs)
+            </summary>
+        </member>
+        <member name="P:RabbitNET.Rabbit.SANA">
+            <summary>
+            Sortie Analogique
+            </summary>
+        </member>
+        <member name="P:RabbitNET.Rabbit.STOR">
+            <summary>
+            Sorties tout ou rien (Leds)
+            </summary>
+        </member>
+        <member name="P:RabbitNET.Rabbit.TimeOut">
+            <summary>
+            Temps d'attente maxi., en ms, entre l'envoi de la requête et la réception de la réponse
+            </summary>
+        </member>
+        <member name="P:RabbitNET.Rabbit.RabbitNum">
+            <summary>
+            Identifiant du noeud Rabbit
+            </summary>
+        </member>
+    </members>
+</doc>

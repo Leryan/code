@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ItemType>PackagingProject</ItemType>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{48474C27-6DA2-4B47-A366-D15728336FE7}</ProjectGuid>
+    <Packages>
+      <Packages xmlns="">
+        <Package name="Microsoft Windows Binaires">
+          <Builder targetFile="..\..\..\text_copier.zip" platform="Windows" configuration="Release|x86" ctype="BinariesZipPackageBuilder">
+            <ChildEntries>
+              <SolutionItemReference path="text_copier\text_copier.csproj" />
+            </ChildEntries>
+            <RootEntry path="text_copier.sln" id=":root:" />
+          </Builder>
+        </Package>
+      </Packages>
+    </Packages>
+  </PropertyGroup>
+</Project>

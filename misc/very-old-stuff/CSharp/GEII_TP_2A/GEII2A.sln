@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GEII2A", "GEII2A\GEII2A.csproj", "{A38C0D8C-180E-4FB4-9006-DC9D5539DA50}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A38C0D8C-180E-4FB4-9006-DC9D5539DA50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A38C0D8C-180E-4FB4-9006-DC9D5539DA50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A38C0D8C-180E-4FB4-9006-DC9D5539DA50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A38C0D8C-180E-4FB4-9006-DC9D5539DA50}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

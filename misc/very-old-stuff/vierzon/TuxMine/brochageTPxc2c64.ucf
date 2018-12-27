@@ -1,0 +1,41 @@
+net HorlogeR loc = p1;
+net HorlogeRC schmitt_trigger;
+net HorlogeRC loc = p2;
+
+#net led1 loc =  p42;
+net led2 loc =  p43;
+net led3 loc =  p44;
+net led4 loc =  p3;
+net led5 loc =  p5;
+net led6 loc =  p6;
+net led7 loc =  p8;
+net led8 loc =  p12;
+
+net Mpap(1) loc = p22;
+net Mpap(2) loc = p21;
+net Mpap(3) loc = p20;
+net Mpap(4) loc = p19;
+
+#
+net MccB loc = p18;
+net MccA loc = p16;
+#
+net piezzoB loc = p42;
+net piezzoA loc = p41;
+#
+net voieB loc = p40;
+net voieA loc = p39;
+#
+net SW4 loc = p38;
+net SW3 loc = p37;
+net SW2 loc = p36;
+net SW1 loc = p34;
+#
+net aff7seg(1) loc = p33;
+net aff7seg(2) loc = p32;
+net aff7seg(3) loc = p31;
+net aff7seg(4) loc = p30;
+net aff7seg(5) loc = p29;
+net aff7seg(6) loc = p28;
+net aff7seg(7) loc = p27;
+net chxAff loc = p23;

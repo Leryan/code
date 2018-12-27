@@ -1,0 +1,1 @@
+#define CleanLCD() MessageLCDrom("                ");
