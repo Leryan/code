@@ -10,12 +10,7 @@ use cursive::event::Event;
 use cursive::event::Key;
 use cursive::menu::MenuTree;
 use cursive::view::ScrollStrategy;
-use cursive::views::BoxView;
-use cursive::views::EditView;
-use cursive::views::IdView;
-use cursive::views::LinearLayout;
-use cursive::views::ScrollView;
-use cursive::views::TextView;
+use cursive::views::*;
 use cursive::Cursive;
 use rocket::chat::Chat;
 
