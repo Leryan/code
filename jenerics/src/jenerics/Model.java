@@ -1,4 +1,4 @@
-package back;
+package jenerics;
 
 public class Model<T> extends BaseModel<T> {
 

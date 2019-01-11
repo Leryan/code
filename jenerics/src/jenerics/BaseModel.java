@@ -1,4 +1,4 @@
-package back;
+package jenerics;
 
 public class BaseModel<T> {
 

@@ -1,4 +1,4 @@
-package back;
+package jenerics;
 
 public abstract class BaseBackend<T, M> {
 
