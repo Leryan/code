@@ -1,6 +1,6 @@
 package back;
 
-public class BaseModel<T> implements IBaseModel<T> {
+public class BaseModel<T> {
 
     private T id;
 
@@ -8,8 +8,7 @@ public class BaseModel<T> implements IBaseModel<T> {
         this.id = id;
     }
 
-    @Override
-    public T ID() {
+    public final T ID() {
         return this.id;
     }
 }
