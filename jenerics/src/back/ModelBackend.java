@@ -1,10 +1,10 @@
 package back;
 
-public class ModelBackend<T, M extends BaseModel<T>> extends BaseBackend<T, M> {
+public class ModelBackend<T> extends BaseBackend<T, Model<T>> {
 
     @Override
-    public M get(T id) {
-        return (M) new Model<>(id);
+    public Model<T> get(T id) {
+        return new Model<>(id);
     }
 
 }
