@@ -1,6 +1,15 @@
 package back;
 
-public abstract class BaseModel<T> {
+public class BaseModel<T> implements IBaseModel<T> {
 
-    public abstract T ID();
+    private T id;
+
+    public BaseModel(T id) {
+        this.id = id;
+    }
+
+    @Override
+    public T ID() {
+        return this.id;
+    }
 }

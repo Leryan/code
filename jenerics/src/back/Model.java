@@ -2,18 +2,12 @@ package back;
 
 public class Model<T> extends BaseModel<T> {
 
-    public T id;
-
     public Model(T id) {
-        this.id = id;
+        super(id);
     }
 
     public void doStuff() {
-        System.out.println("i do stuff: " + this.id);
-    }
-
-    public T ID() {
-        return this.id;
+        System.out.println("i do stuff: " + this.ID());
     }
 
 }
