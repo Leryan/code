@@ -1,0 +1,4 @@
+*.sqlite
+mypackage
+.vscode
+example.out.csv
