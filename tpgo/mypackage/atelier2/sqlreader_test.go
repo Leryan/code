@@ -111,6 +111,14 @@ func TestSQLReaderWithConvey(t *testing.T) {
 		So(err, ShouldBeNil)
 		So(reader, ShouldNotBeNil)
 
+		Convey("Headers should return column names", func() {
+			headers := reader.Headers()
+			So(headers, ShouldHaveLength, 3)
+			So(headers[0], ShouldEqual, "coltest1")
+			So(headers[1], ShouldEqual, "coltest2")
+			So(headers[2], ShouldEqual, "coltest3")
+		})
+
 		Convey("Next #1 should return one line", func() {
 			row, err := reader.Next()
 			So(err, ShouldBeNil)
