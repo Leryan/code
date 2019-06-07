@@ -6,13 +6,25 @@ import (
 	"os"
 	"strings"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/mattn/go-sqlite3" // register sqlite3 driver, compatible with database/sql
 )
 
 type sqlwriter struct {
 	db *sql.DB
 }
 
+// NewSQLWriter removes and creates the sqlite3 database located at dbpath.
+func NewSQLWriter(dbpath string) (Writer, error) {
+	os.Remove(dbpath)
+	db, err := sql.Open("sqlite3", dbpath)
+	if err != nil {
+		return nil, err
+	}
+	sw := sqlwriter{db: db}
+	return &sw, nil
+}
+
+// From setup the example table and write every row from the given reader.
 func (s *sqlwriter) From(reader Reader) error {
 	s.setupTable(reader.Headers())
 
@@ -58,14 +70,4 @@ func (s *sqlwriter) addRow(columns []interface{}) error {
 	stmt += ")"
 	_, err := s.db.Exec(stmt, columns...)
 	return err
-}
-
-func NewSQLWriter(dbpath string) (Writer, error) {
-	os.Remove(dbpath)
-	db, err := sql.Open("sqlite3", dbpath)
-	if err != nil {
-		return nil, err
-	}
-	sw := sqlwriter{db: db}
-	return &sw, nil
 }

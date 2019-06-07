@@ -11,6 +11,7 @@ type csvreader struct {
 	fh      *os.File
 }
 
+// NewCSVReader reads CSV with ";" separator
 func NewCSVReader(path string) (Reader, error) {
 	fh, err := os.Open(path)
 	if err != nil {

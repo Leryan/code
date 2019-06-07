@@ -10,6 +10,7 @@ type sqlreader struct {
 	cursor *sql.Rows
 }
 
+// NewSQLReader opens sqlite3 database located at dbpath.
 func NewSQLReader(dbpath string) (Reader, error) {
 	db, err := sql.Open("sqlite3", dbpath)
 	return &sqlreader{db: db}, err

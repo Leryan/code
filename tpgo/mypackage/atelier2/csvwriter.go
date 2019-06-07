@@ -10,6 +10,7 @@ type csvwriter struct {
 	w  *csv.Writer
 }
 
+// NewCSVWriter writes with "," separator
 func NewCSVWriter(path string) (Writer, error) {
 	fh, err := os.Create(path)
 	return &csvwriter{

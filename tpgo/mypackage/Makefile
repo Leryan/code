@@ -1,3 +1,9 @@
+init:
+	go mod download
+build:
+	go build .
+run: build
+	./mypackage
 test:
 	go test ./...
 bench:
