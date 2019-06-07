@@ -30,8 +30,8 @@ func (s *sqlreader) Headers() []string {
 	}
 	headers := make([]string, 0)
 
+	var n1, n2, n3, n4, n5, n6 interface{} // alloc only once
 	for r.Next() {
-		var n1, n2, n3, n4, n5, n6 interface{} // optim possible: go test mypackage/atelier2 -benchmem -bench=.
 		err := r.Scan(&n1, &n2, &n3, &n4, &n5, &n6)
 		if err != nil {
 			panic(err)
