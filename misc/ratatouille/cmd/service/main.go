@@ -16,41 +16,41 @@ import (
 
 const addr = "localhost:6000"
 
-type doMother struct{}
+type doMother int
 
-func (d doMother) Do(ctx context.Context, r *empty.Empty) (*ratatouille.Mother, error) {
+func (d doMother) Do(ctx context.Context, r *ratatouille.Stuff) (*ratatouille.Mother, error) {
 	return &ratatouille.Mother{
-		Msg: "mother",
+		Msg: "doing " + r.Stuff,
 	}, nil
 }
 
-func (d doMother) DoMother(ctx context.Context, r *empty.Empty) (*ratatouille.Mother, error) {
-	return &ratatouille.Mother{
-		Msg: "DoMother",
+func (d doMother) Unicorn(ctx context.Context, r *empty.Empty) (*ratatouille.Derp, error) {
+	return &ratatouille.Derp{
+		Name: "Derpi",
 	}, nil
 }
 
-func NewMother() ratatouille.DoMotherServer {
-	return &doMother{}
+func NewMother() ratatouille.MotherServiceServer {
+	return doMother(0)
 }
 
-type doSon struct{}
+type doSon int
 
-func (d doSon) Do(ctx context.Context, mother *ratatouille.Mother) (*ratatouille.Son, error) {
+func (d doSon) Do(ctx context.Context, r *ratatouille.Stuff) (*ratatouille.Son, error) {
 	time.Sleep(time.Millisecond * 50)
 	return &ratatouille.Son{
-		Msg: mother.Msg,
+		Msg: "doing " + r.Stuff,
 	}, nil
 }
 
-func (d doSon) DoSon(context.Context, *empty.Empty) (*ratatouille.Son, error) {
-	return &ratatouille.Son{
-		Msg: "DoSon",
+func (d doSon) Belch(context.Context, *empty.Empty) (*ratatouille.Loudness, error) {
+	return &ratatouille.Loudness{
+		Db: uint64(1000),
 	}, nil
 }
 
-func NewSon() ratatouille.DoSonServer {
-	return &doSon{}
+func NewSon() ratatouille.SonServiceServer {
+	return doSon(0)
 }
 
 func main() {
@@ -61,8 +61,8 @@ func main() {
 	defer listener.Close()
 
 	srv := grpc.NewServer()
-	ratatouille.RegisterDoMotherServer(srv, NewMother())
-	ratatouille.RegisterDoSonServer(srv, NewSon())
+	ratatouille.RegisterMotherServiceServer(srv, NewMother())
+	ratatouille.RegisterSonServiceServer(srv, NewSon())
 
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM)
@@ -88,24 +88,24 @@ func main() {
 		stop <- true
 	}()
 
-	son := ratatouille.NewDoSonClient(client)
-	mother := ratatouille.NewDoMotherClient(client)
+	son := ratatouille.NewSonServiceClient(client)
+	mother := ratatouille.NewMotherServiceClient(client)
 
 	go func() {
 		for true {
 			ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-			res, err := son.Do(ctx, &ratatouille.Mother{Msg: "from son client"})
+			res, err := son.Do(ctx, &ratatouille.Stuff{Stuff: "wank"})
 			log.Printf("son.Do - Second: %v -> %v", spew.Sdump(res), err)
 			cancel()
 
 			ctx, cancel = context.WithTimeout(context.Background(), time.Millisecond*10)
-			res, err = son.Do(ctx, &ratatouille.Mother{Msg: "from son client"})
+			res, err = son.Do(ctx, &ratatouille.Stuff{Stuff: "internet"})
 			log.Printf("son.Do - Millisec: %v -> %v", spew.Sdump(res), err)
 			cancel()
 
 			ctx, cancel = context.WithTimeout(context.Background(), time.Second)
-			res, err = son.DoSon(ctx, &empty.Empty{})
-			log.Printf("son.DoSon - Second: %v -> %v", spew.Sdump(res), err)
+			loudness, err := son.Belch(ctx, &empty.Empty{})
+			log.Printf("son.DoSon - Second: %v -> %v", spew.Sdump(loudness), err)
 
 			cancel()
 
@@ -116,11 +116,11 @@ func main() {
 	go func() {
 		for true {
 			ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
-			res, err := mother.Do(ctx, &empty.Empty{})
-			log.Printf("mother: %v -> %v", spew.Sdump(res), err)
+			res, err := mother.Do(ctx, &ratatouille.Stuff{Stuff: "yell"})
+			log.Printf("mother.Do: %v -> %v", spew.Sdump(res), err)
 
-			res, err = mother.DoMother(ctx, &empty.Empty{})
-			log.Printf("mother: %v -> %v", spew.Sdump(res), err)
+			unicorn, err := mother.Unicorn(ctx, &empty.Empty{})
+			log.Printf("mother.Unicorn: %v -> %v", spew.Sdump(unicorn), err)
 
 			cancel()
 

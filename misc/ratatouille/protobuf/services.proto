@@ -6,20 +6,32 @@ option go_package = ".;ratatouille";
 
 import "google/protobuf/empty.proto";
 
-service DoMother {
-    rpc Do(google.protobuf.Empty) returns (Mother);
-    rpc DoMother(google.protobuf.Empty) returns (Mother);
+service MotherService {
+    rpc Do(Stuff) returns (Mother);
+    rpc Unicorn(google.protobuf.Empty) returns (Derp);
 }
 
-service DoSon {
-    rpc Do(Mother) returns (Son);
-    rpc DoSon(google.protobuf.Empty) returns (Son);
+service SonService {
+    rpc Do(Stuff) returns (Son);
+    rpc Belch(google.protobuf.Empty) returns (Loudness);
+}
+
+message Stuff {
+    string stuff = 1;
 }
 
 message Mother {
     string msg = 1;
 }
 
+message Derp {
+    string name = 1;
+}
+
 message Son {
     string msg = 1;
+}
+
+message Loudness {
+    uint64 db = 1;
 }
