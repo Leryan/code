@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package ratatouille;
+
+option go_package = ".;ratatouille";
+
+import "google/protobuf/empty.proto";
+
+service DoMother {
+    rpc Do(google.protobuf.Empty) returns (Mother);
+    rpc DoMother(google.protobuf.Empty) returns (Mother);
+}
+
+service DoSon {
+    rpc Do(Mother) returns (Son);
+    rpc DoSon(google.protobuf.Empty) returns (Son);
+}
+
+message Mother {
+    string msg = 1;
+}
+
+message Son {
+    string msg = 1;
+}

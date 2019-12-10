@@ -1,5 +1,5 @@
 build:
-	gcc -O2 -Wall -lX11 -std=c99 -o brightnessctl brightnessctl.c
+	gcc ${CFLAGS} -O2 -Wall -lX11 -std=c99 -o brightnessctl brightnessctl.c
 
 install:
 	cp brightnessctl /usr/local/bin/
