@@ -1,0 +1,27 @@
+---
+version: '3'
+
+volumes:
+    es_data:
+        driver: local
+
+services:
+    es:
+        image: elasticsearch:6.5.1
+        volumes:
+            - es_data:/usr/share/elasticsearch/data
+    kibana:
+        build:
+            dockerfile: Dockerfile-kibana
+            context: .
+        ports:
+            - "5601:5601"
+        depends_on:
+            - es
+        environment:
+            ELASTICSEARCH_URL: "http://es:9200/"
+    agent:
+        build:
+            context: .
+        ports:
+            - "5959:5959"

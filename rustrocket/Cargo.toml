@@ -1,0 +1,21 @@
+[package]
+name = "rocket"
+version = "0.1.0"
+authors = ["Florent Peterschmitt <florent@peterschmitt.fr>"]
+
+[[bin]]
+name = "rocket"
+path = "src/main.rs"
+
+[lib]
+name = "rocket"
+path = "src/lib/lib.rs"
+
+[dependencies]
+clap = "2"
+reqwest = "0.9.5"
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = "1.0"
+cursive = "0.10"
+websocket = "0.22.1"

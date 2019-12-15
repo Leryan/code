@@ -1,0 +1,5 @@
+*.sqlite
+mypackage
+.vscode
+example.out.csv
+atelier2/testing.db

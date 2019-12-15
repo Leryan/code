@@ -1,0 +1,22 @@
+/* TIMERS */
+
+//TIMER INTERRUPT ENABLE
+#define TMR0_IE INTCONbits.TMR0IE
+#define TMR1_IE PIE1bits.TMR1IE
+#define TMR2_IE PIE1bits.TMR2IE
+#define TMR3_IE PIE2bits.TMR3IE
+
+//TIMER INTERRUPT FLAGS
+#define TMR0_FLAG INTCONbits.TMR0IF
+#define TMR1_FLAG PIR1bits.TMR1IF
+
+//TIMER 0
+#define TMR0_ON T0CONbits.TMR0ON
+#define TMR0_8B T0CONbits.T08BIT
+#define TMR0_OSC T0CONbits.T0CS
+#define TMR0_EDG T0CONbits.T0SE
+#define TMR0_PSA T0CONbits.PSA
+#define TMR0_PSA2 T0CONbits.T0PS2
+#define TMR0_PSA0 T0CONbits.T0PS1
+#define TMR0_PSA1 T0CONbits.T0PS0
+/**********/
