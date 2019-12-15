@@ -2,9 +2,9 @@
 
 import os
 import argparse
-import requests
 import glob
 import uuid
+import requests
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dry-run", action="store_true")
@@ -45,7 +45,7 @@ class FakeResponse:
     text = "fake"
 
     def json(self):
-        return '"' + r.text + '"'
+        return '"' + self.text + '"'
 
 
 def headers():
@@ -134,7 +134,7 @@ def meteo(ville: str, s):
     weatherCode = int(res["current_condition"][0]["weatherCode"])
 
     pic = s.get(f"https://wttr.in/{ville}?format=%c+%t").text.strip()
-    message = f"À {ville} il fait {pic}"
+    message = f" * {ville}: {pic}"
 
     if temperature < 15 and weatherCode == "113":
         message = f"{message}. J’trouve qu’il fait beau, mais encore frais. Mais beau ! :perceval:"
@@ -151,13 +151,13 @@ def meteo(ville: str, s):
 
 
 def mode_bonjour():
-    post_raw(":wave:")
+    post_raw(":wave:", chan("maison"))
     mode_meteo()
 
 
 def mode_meteo():
     s = requests.Session()
-    m = []
+    m = ["Mééééétééoooooooooooo :"]
     m.append(meteo("Berlin", s))
     m.append(meteo("Lille", s))
     m.append(meteo("Nantes", s))
