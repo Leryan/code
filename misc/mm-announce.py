@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
-import os
 import argparse
-import glob
-import uuid
-import requests
 import datetime
+import glob
+import os
+import time
+import traceback
+import uuid
+
+import requests
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dry-run", action="store_true")
@@ -16,7 +19,9 @@ parser.add_argument(
 parser.add_argument("--chan", default="", type=str)
 parser.add_argument("--mode", default="reboot", type=str)
 parser.add_argument("--id", type=str, default="")
-parser.add_argument("--annivs", type=str, default="mm-announce-annivs", help="fichier des annivs")
+parser.add_argument(
+    "--annivs", type=str, default="mm-announce-annivs", help="fichier des annivs"
+)
 
 args = parser.parse_args()
 
@@ -64,19 +69,21 @@ class KO(Exception):
     pass
 
 
-def main():
+def check_reboot():
     reboot_required = len(glob.glob("/var/run/reboot-required*")) > 0 or args.dry_run
     announced = len(glob.glob(announced_file)) > 0
 
     if announced:
         if reboot_required:
-            raise OK("annonce déjà postée")
+            return "annonce déjà postée"
         os.unlink(announced_file)
 
     if not reboot_required:
-        raise OK("rien à faire")
+        return "rien à faire"
 
-    message = "@all **[message auto]** le serveur va redémarrer cette nuit pour appliquer des patchs de sécurité"
+    message = (
+        "@all Le serveur va redémarrer cette nuit pour appliquer des patchs de sécurité"
+    )
 
     r = post(message, chan("maison"))
 
@@ -86,11 +93,11 @@ def main():
     with open(announced_file, "w") as f:
         f.write("annonce de reboot postée")
 
-    raise OK("annonce postée")
+    return "annonce postée"
 
 
 def ping(message: str):
-    message = "**[message auto]** mm-announce.py ping: " + message
+    message = "ping: " + message
     return post(message, chan("system"))
 
 
@@ -119,12 +126,7 @@ def mode_reboot():
         args.id = str(uuid.uuid4())
         print(args.id)
 
-    try:
-        main()
-    except OK as e:
-        ping("ok: `" + str(e) + "`")
-    except KO as e:
-        ping("**KO: ** @flop `" + str(e) + "`")
+    ping("**ok: ** " + check_reboot())
 
 
 def meteo(ville: str, s):
@@ -148,6 +150,7 @@ def meteo(ville: str, s):
         message = f"{message}. Putain on crève…"
 
     return message
+
 
 def mode_anniv():
     annivs = []
@@ -185,6 +188,10 @@ def mode_bonjour():
     mode_meteo()
 
 
+def mode_fail():
+    raise Exception("failing here")
+
+
 def mode_meteo():
     s = requests.Session()
     m = ["Mééééétééoooooooooooo :"]
@@ -195,17 +202,44 @@ def mode_meteo():
     post_raw("\n".join(m), chan("maison"))
 
 
-if __name__ == "__main__":
-    try:
-        if args.mode == "reboot":
-            mode_reboot()
-        elif args.mode == "bonjour":
-            mode_bonjour()
-        elif args.mode == "meteo":
-            mode_meteo()
-        elif args.mode == "anniv":
-            mode_anniv()
+def main_commands():
+    if args.mode == "reboot":
+        mode_reboot()
+    elif args.mode == "bonjour":
+        mode_bonjour()
+    elif args.mode == "meteo":
+        mode_meteo()
+    elif args.mode == "anniv":
+        mode_anniv()
+    elif args.mode == "fail":
+        mode_fail()
+    else:
+        raise Exception("je connais pas ce mode là… " + args.mode)
+
+
+def ret(cur, max_):
+    if cur >= max_:
+        return "@flop"
+    return f"{cur}/{max_}"
+
+
+def main():
+    retries = 3
+    for retry in range(retries):
+        try:
+            main_commands()
+        except KO as e:
+            ping(f"{ret(retry+1, retries)} **KO: ** {args.mode} -> `{e}`")
+            ping(f"traceback:\n```\n{traceback.format_exc()}```\n")
+        except Exception as e:
+            ping(f"{ret(retry+1, retries)} **UNEXPECTED KO: ** {args.mode} -> `{e}`")
+            ping(f"traceback:\n```\n{traceback.format_exc()}```\n")
         else:
-            raise Exception("je connais pas ce mode là… " + args.mode)
-    except Exception as e:
-        ping(f"**UNEXPECTED KO (mode {args.mode}): ** @flop `" + str(e) + "`")
+            ping(f"**ok: ** {args.mode}")
+            return
+
+        time.sleep(10)
+
+
+if __name__ == "__main__":
+    main()
