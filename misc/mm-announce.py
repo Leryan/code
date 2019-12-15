@@ -147,7 +147,7 @@ def meteo(ville: str, s):
     elif temperature > 30:
         message = f"{message}. Putain on crève…"
 
-    post_raw(message, chan("maison"))
+    return message
 
 
 def mode_bonjour():
@@ -157,9 +157,12 @@ def mode_bonjour():
 
 def mode_meteo():
     s = requests.Session()
-    meteo("Berlin", s)
-    meteo("Lille", s)
-    meteo("Nantes", s)
+    m = []
+    m.append(meteo("Berlin", s))
+    m.append(meteo("Lille", s))
+    m.append(meteo("Nantes", s))
+
+    post_raw("\n".join(m), chan("maison"))
 
 
 if __name__ == "__main__":
