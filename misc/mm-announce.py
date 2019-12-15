@@ -139,7 +139,7 @@ def meteo(ville: str, s):
     pic = s.get(f"https://wttr.in/{ville}?format=%c+%t").text.strip()
     message = f" * {ville} : {pic}"
 
-    if temperature < 15 and weatherCode == "113":
+    if temperature < 15 and weatherCode == 113:
         message = f"{message}. J’trouve qu’il fait beau, mais encore frais. Mais beau ! :perceval:"
     elif temperature < 8:
         message = f"{message}. Ça pince monseigneur !"
