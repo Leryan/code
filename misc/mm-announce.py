@@ -127,7 +127,7 @@ def mode_reboot():
         args.id = str(uuid.uuid4())
         print(args.id)
 
-    ping("**ok: ** " + check_reboot())
+    print(check_reboot())
 
 
 def meteo(ville: str, s):
