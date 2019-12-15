@@ -16,6 +16,7 @@ parser.add_argument("--bearer", required=True, type=str, help="personnal access 
 parser.add_argument(
     "--apiurl", required=True, type=str, help="https://your.mattermost.domain/api/v4"
 )
+parser.add_argument("--retry", default=10, type=int)
 parser.add_argument("--chan", default="", type=str)
 parser.add_argument("--mode", default="reboot", type=str)
 parser.add_argument("--id", type=str, default="")
@@ -217,28 +218,30 @@ def main_commands():
         raise Exception("je connais pas ce mode là… " + args.mode)
 
 
-def ret(cur, max_):
+def ret(cur, max_, wait):
     if cur >= max_:
         return "@flop"
-    return f"{cur}/{max_}"
+    return f"{cur}/{max_} (wait {wait}s)"
 
 
 def main():
     retries = 3
     for retry in range(retries):
+        wait = args.retry * (retry + 1)
+        retval = ret(retry + 1, retries, wait)
         try:
             main_commands()
         except KO as e:
-            ping(f"{ret(retry+1, retries)} **KO: ** {args.mode} -> `{e}`")
+            ping(f"{retval} **KO: ** {args.mode} -> `{e}`")
             ping(f"traceback:\n```\n{traceback.format_exc()}```\n")
         except Exception as e:
-            ping(f"{ret(retry+1, retries)} **UNEXPECTED KO: ** {args.mode} -> `{e}`")
+            ping(f"{retval} **UNEXPECTED KO: ** {args.mode} -> `{e}`")
             ping(f"traceback:\n```\n{traceback.format_exc()}```\n")
         else:
             ping(f"**ok: ** {args.mode}")
             return
 
-        time.sleep(10)
+        time.sleep(wait)
 
 
 if __name__ == "__main__":
