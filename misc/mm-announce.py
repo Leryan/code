@@ -12,6 +12,7 @@ parser.add_argument("--bearer", required=True, type=str, help="personnal access 
 parser.add_argument(
     "--apiurl", required=True, type=str, help="https://your.mattermost.domain/api/v4"
 )
+parser.add_argument("--mode", default="reboot", type=str)
 parser.add_argument("--id", type=str, default="")
 
 args = parser.parse_args()
@@ -26,7 +27,7 @@ announced_file = "/tmp/mm-announced"
 
 
 def chan(name: str):
-    return channels.get(name, channels["test"])
+    return channels[name]
 
 
 def chan_rev(id_: str):
@@ -92,6 +93,10 @@ def post(message: str, channel_id: str):
     if args.id:
         message = message + ' [ envoyé par "' + args.id + '" ]'
 
+    return post_raw(message, channel_id)
+
+
+def post_raw(message: str, channel_id: str):
     if args.dry_run:
         print(">> dry run post")
         print(chan_rev(channel_id) + " (" + channel_id + ")" + " -> " + message)
@@ -104,7 +109,7 @@ def post(message: str, channel_id: str):
     )
 
 
-if __name__ == "__main__":
+def mode_reboot():
     if args.id == "uuid":
         args.id = str(uuid.uuid4())
         print(args.id)
@@ -117,3 +122,43 @@ if __name__ == "__main__":
         ping("**KO: ** @flop `" + str(e) + "`")
     except Exception as e:
         ping("**UNEXPECTED KO: ** @flop `" + str(e) + "`")
+
+
+def meteo(ville: str, res: dict):
+    temperature = int(res["current_condition"][0]["temp_C"])
+    weatherCode = int(res["current_condition"][0]["weatherCode"])
+
+    message = f"À {ville} il fait {temperature}°C"
+
+    if temperature < 18 and weatherCode == "113":
+        message = "J’trouve qu’il fait beau, mais encore frais. Mais beau ! :perceval:"
+    elif temperature < 8:
+        message = f"{message}. Ça pince monseigneur !"
+    elif temperature < 18:
+        message = f"{message}. Fait pas chaud quand même."
+    elif temperature > 25:
+        message = f"{message}. Mettez vous les couilles à l’air si vous voulez pas être stériles."
+    elif temperature > 30:
+        message = f"{message}. Putain on crève…"
+
+    post_raw(message, chan("maison"))
+
+
+def mode_bonjour():
+    post_raw(":wave:")
+    mode_meteo()
+
+
+def mode_meteo():
+    meteo("Berlin", requests.get("https://wttr.in/Berlin?format=j1&0").json())
+    meteo("Lille", requests.get("https://wttr.in/Lille?format=j1&0").json())
+    meteo("Nantes", requests.get("https://wttr.in/Nantes?format=j1&0").json())
+
+
+if __name__ == "__main__":
+    if args.mode == "reboot":
+        mode_reboot()
+    elif args.mode == "bonjour":
+        mode_bonjour()
+    elif args.mode == "meteo":
+        mode_meteo()
