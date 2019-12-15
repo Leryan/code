@@ -12,6 +12,7 @@ parser.add_argument("--bearer", required=True, type=str, help="personnal access 
 parser.add_argument(
     "--apiurl", required=True, type=str, help="https://your.mattermost.domain/api/v4"
 )
+parser.add_argument("--chan", default="", type=str)
 parser.add_argument("--mode", default="reboot", type=str)
 parser.add_argument("--id", type=str, default="")
 
@@ -27,6 +28,8 @@ announced_file = "/tmp/mm-announced"
 
 
 def chan(name: str):
+    if args.chan:
+        return channels[args.chan]
     return channels[name]
 
 
@@ -124,14 +127,17 @@ def mode_reboot():
         ping("**UNEXPECTED KO: ** @flop `" + str(e) + "`")
 
 
-def meteo(ville: str, res: dict):
+def meteo(ville: str, s):
+    res = s.get(f"https://wttr.in/{ville}?format=j1&0").json()
+
     temperature = int(res["current_condition"][0]["temp_C"])
     weatherCode = int(res["current_condition"][0]["weatherCode"])
 
-    message = f"À {ville} il fait {temperature}°C"
+    pic = s.get(f"https://wttr.in/{ville}?format=%c+%t").text.strip()
+    message = f"À {ville} il fait {pic}"
 
-    if temperature < 18 and weatherCode == "113":
-        message = "J’trouve qu’il fait beau, mais encore frais. Mais beau ! :perceval:"
+    if temperature < 15 and weatherCode == "113":
+        message = f"{message}. J’trouve qu’il fait beau, mais encore frais. Mais beau ! :perceval:"
     elif temperature < 8:
         message = f"{message}. Ça pince monseigneur !"
     elif temperature < 18:
@@ -150,9 +156,10 @@ def mode_bonjour():
 
 
 def mode_meteo():
-    meteo("Berlin", requests.get("https://wttr.in/Berlin?format=j1&0").json())
-    meteo("Lille", requests.get("https://wttr.in/Lille?format=j1&0").json())
-    meteo("Nantes", requests.get("https://wttr.in/Nantes?format=j1&0").json())
+    s = requests.Session()
+    meteo("Berlin", s)
+    meteo("Lille", s)
+    meteo("Nantes", s)
 
 
 if __name__ == "__main__":
