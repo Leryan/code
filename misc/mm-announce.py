@@ -5,6 +5,7 @@ import argparse
 import glob
 import uuid
 import requests
+import datetime
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--dry-run", action="store_true")
@@ -15,6 +16,7 @@ parser.add_argument(
 parser.add_argument("--chan", default="", type=str)
 parser.add_argument("--mode", default="reboot", type=str)
 parser.add_argument("--id", type=str, default="")
+parser.add_argument("--annivs", type=str, default="mm-announce-annivs", help="fichier des annivs")
 
 args = parser.parse_args()
 
@@ -123,8 +125,6 @@ def mode_reboot():
         ping("ok: `" + str(e) + "`")
     except KO as e:
         ping("**KO: ** @flop `" + str(e) + "`")
-    except Exception as e:
-        ping("**UNEXPECTED KO: ** @flop `" + str(e) + "`")
 
 
 def meteo(ville: str, s):
@@ -149,6 +149,36 @@ def meteo(ville: str, s):
 
     return message
 
+def mode_anniv():
+    annivs = []
+    auj = datetime.datetime.now()
+    with open(args.annivs, "r") as f:
+        lines = f.readlines()
+        for line in lines:
+            name, anniv = line.split(" ", 1)
+            jour, mois, annee = list(map(int, anniv.split("/", 2)))
+
+            print(name, jour, mois, annee)
+
+            if auj.month == mois and auj.day == jour:
+                annivs.append([name, auj.year - annee])
+
+    if len(annivs) == 0:
+        return
+
+    if len(annivs) == 1:
+        message = f"Aujourd’hui {annivs[0][0]} a {annivs[0][1]} ans ! Bon anniversaaaaaaiiiiiiireuuuuu !"
+
+    else:
+        message = "C'est l'anniversaire dans tous les recoins, c'est presque tous les ans qu'on a l'anniversaire. Grâce à cet anni... c'est la joie c'est pratique, c'est au moins un principe à retenir pour faire la frite... c'est huuuum lalalalala. Cette année c'est bien, l'anniversaire tombe à pic !\n"
+
+        for anni in annivs:
+            message += f"{anni[0]} a {anni[1]} ans !\n"
+
+        message += "\nBon anniversaiiiiiiireuuuuu !"
+
+    post_raw(message, chan("maison"))
+
 
 def mode_bonjour():
     post_raw(":wave:", chan("maison"))
@@ -166,9 +196,16 @@ def mode_meteo():
 
 
 if __name__ == "__main__":
-    if args.mode == "reboot":
-        mode_reboot()
-    elif args.mode == "bonjour":
-        mode_bonjour()
-    elif args.mode == "meteo":
-        mode_meteo()
+    try:
+        if args.mode == "reboot":
+            mode_reboot()
+        elif args.mode == "bonjour":
+            mode_bonjour()
+        elif args.mode == "meteo":
+            mode_meteo()
+        elif args.mode == "anniv":
+            mode_anniv()
+        else:
+            raise Exception("je connais pas ce mode là… " + args.mode)
+    except Exception as e:
+        ping(f"**UNEXPECTED KO (mode {args.mode}): ** @flop `" + str(e) + "`")
