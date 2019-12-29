@@ -66,20 +66,20 @@ pub mod lib {
             self.slow_fast.insert(element.key(), element.data().clone());
         }
 
-        pub fn get_slow(&self, key: i32) -> Value<V> {
+        pub fn direct_map_value(&self, key: i32) -> Value<V> {
             self.slow.get(&key).unwrap().clone()
         }
 
-        pub fn get_slow_fast(&self, key: i32) -> V {
+        pub fn direct_map_value_field(&self, key: i32) -> V {
             self.slow_fast.get(&key).unwrap().clone()
         }
 
-        pub fn get_fast(&self, key: i32) -> V {
+        pub fn indirect_value_field(&self, key: i32) -> V {
             let i = *self.fast_map.get(&key).unwrap();
             self.fast_idx.get(i).unwrap().clone()
         }
 
-        pub fn get_fast_full(&self, key: i32) -> Value<V> {
+        pub fn indirect_value(&self, key: i32) -> Value<V> {
             let i = *self.fast_map.get(&key).unwrap();
             self.fast_full_idx.get(i).unwrap().clone()
         }

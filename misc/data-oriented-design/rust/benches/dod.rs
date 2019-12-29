@@ -44,17 +44,17 @@ fn bench_ctrl(c: &mut Criterion) {
     for i in [1000].iter() {
         let id = format!("ctrl: {:?}: direct map -> Value<T>", ctrl.name());
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
-            b.iter(|| ctrl.get_slow(**i))
+            b.iter(|| ctrl.direct_map_value(**i))
         });
 
         let id = format!("ctrl: {:?}: direct map -> T", ctrl.name());
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
-            b.iter(|| ctrl.get_slow_fast(**i))
+            b.iter(|| ctrl.direct_map_value_field(**i))
         });
 
         let id = format!("ctrl: {:?}: map -> idx -> vec[idx] -> T", ctrl.name());
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
-            b.iter(|| ctrl.get_fast(**i))
+            b.iter(|| ctrl.indirect_value_field(**i))
         });
 
         let id = format!(
@@ -62,7 +62,7 @@ fn bench_ctrl(c: &mut Criterion) {
             ctrl.name()
         );
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
-            b.iter(|| ctrl.get_fast_full(**i))
+            b.iter(|| ctrl.indirect_value(**i))
         });
     }
 
@@ -70,17 +70,17 @@ fn bench_ctrl(c: &mut Criterion) {
     for i in [1000].iter() {
         let id = format!("ctrl: {:?}: direct map -> Value<T>", ctrl.name());
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
-            b.iter(|| ctrl.get_slow(**i))
+            b.iter(|| ctrl.direct_map_value(**i))
         });
 
         let id = format!("ctrl: {:?}: direct map -> T", ctrl.name());
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
-            b.iter(|| ctrl.get_slow_fast(**i))
+            b.iter(|| ctrl.direct_map_value_field(**i))
         });
 
         let id = format!("ctrl: {:?}: map -> idx -> vec[idx] -> T", ctrl.name());
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
-            b.iter(|| ctrl.get_fast(**i))
+            b.iter(|| ctrl.indirect_value_field(**i))
         });
 
         let id = format!(
@@ -88,7 +88,7 @@ fn bench_ctrl(c: &mut Criterion) {
             ctrl.name()
         );
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
-            b.iter(|| ctrl.get_fast_full(**i))
+            b.iter(|| ctrl.indirect_value(**i))
         });
     }
 }
