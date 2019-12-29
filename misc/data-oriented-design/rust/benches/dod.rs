@@ -42,53 +42,67 @@ fn bench_ctrl(c: &mut Criterion) {
     let mut group = c.benchmark_group("dod");
     let ctrl = ctrl_i64;
     for i in [1000].iter() {
-        let id = format!("ctrl: {:?}: direct map -> Value<T>", ctrl.name());
+        let id = format!("ctrl: {:?}: direct map clone -> Value<T>", ctrl.name());
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
             b.iter(|| ctrl.direct_map_value(**i))
         });
 
-        let id = format!("ctrl: {:?}: direct map -> T", ctrl.name());
+        let id = format!("ctrl: {:?}: direct map ref -> &Value<T>", ctrl.name());
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.direct_map_value_ref(**i))
+        });
+
+        let id = format!("ctrl: {:?}: direct map field -> T", ctrl.name());
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
             b.iter(|| ctrl.direct_map_value_field(**i))
         });
 
-        let id = format!("ctrl: {:?}: map -> idx -> vec[idx] -> T", ctrl.name());
-        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
-            b.iter(|| ctrl.indirect_value_field(**i))
-        });
-
-        let id = format!(
-            "ctrl: {:?}: map -> idx -> vec[idx] -> Value<T>",
-            ctrl.name()
-        );
+        let id = format!("ctrl: {:?}: indirect clone -> Value<T>", ctrl.name());
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
             b.iter(|| ctrl.indirect_value(**i))
+        });
+
+        let id = format!("ctrl: {:?}: indirect ref -> &Value<T>", ctrl.name());
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.indirect_value_ref(**i))
+        });
+
+        let id = format!("ctrl: {:?}: indirect field -> T", ctrl.name());
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.indirect_value_field(**i))
         });
     }
 
     let ctrl = ctrl_string;
     for i in [1000].iter() {
-        let id = format!("ctrl: {:?}: direct map -> Value<T>", ctrl.name());
+        let id = format!("ctrl: {:?}: direct map clone -> Value<T>", ctrl.name());
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
             b.iter(|| ctrl.direct_map_value(**i))
         });
 
-        let id = format!("ctrl: {:?}: direct map -> T", ctrl.name());
+        let id = format!("ctrl: {:?}: direct map ref -> &Value<T>", ctrl.name());
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.direct_map_value_ref(**i))
+        });
+
+        let id = format!("ctrl: {:?}: direct map field -> T", ctrl.name());
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
             b.iter(|| ctrl.direct_map_value_field(**i))
         });
 
-        let id = format!("ctrl: {:?}: map -> idx -> vec[idx] -> T", ctrl.name());
-        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
-            b.iter(|| ctrl.indirect_value_field(**i))
-        });
-
-        let id = format!(
-            "ctrl: {:?}: map -> idx -> vec[idx] -> Value<T>",
-            ctrl.name()
-        );
+        let id = format!("ctrl: {:?}: indirect clone -> Value<T>", ctrl.name());
         group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
             b.iter(|| ctrl.indirect_value(**i))
+        });
+
+        let id = format!("ctrl: {:?}: indirect ref -> &Value<T>", ctrl.name());
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.indirect_value_ref(**i))
+        });
+
+        let id = format!("ctrl: {:?}: indirect field -> T", ctrl.name());
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.indirect_value_field(**i))
         });
     }
 }
