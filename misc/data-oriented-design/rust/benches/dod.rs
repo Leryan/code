@@ -40,21 +40,37 @@ fn bench_ctrl(c: &mut Criterion) {
     }
 
     let mut group = c.benchmark_group("ctrl");
-    for i in [1000, 10000].iter() {
+    for i in [1000].iter() {
         group.bench_with_input(BenchmarkId::new("slow i64", i), &i, |b, i| {
             b.iter(|| ctrl_i64.get_slow(**i))
+        });
+
+        group.bench_with_input(BenchmarkId::new("slow fast i64", i), &i, |b, i| {
+            b.iter(|| ctrl_i64.get_slow_fast(**i))
         });
 
         group.bench_with_input(BenchmarkId::new("fast i64", i), &i, |b, i| {
             b.iter(|| ctrl_i64.get_fast(**i))
         });
 
+        group.bench_with_input(BenchmarkId::new("fast full i64", i), &i, |b, i| {
+            b.iter(|| ctrl_i64.get_fast_full(**i))
+        });
+
         group.bench_with_input(BenchmarkId::new("slow string", i), &i, |b, i| {
             b.iter(|| ctrl_string.get_slow(**i))
         });
 
+        group.bench_with_input(BenchmarkId::new("slow fast string", i), &i, |b, i| {
+            b.iter(|| ctrl_string.get_slow_fast(**i))
+        });
+
         group.bench_with_input(BenchmarkId::new("fast string", i), &i, |b, i| {
             b.iter(|| ctrl_string.get_fast(**i))
+        });
+
+        group.bench_with_input(BenchmarkId::new("fast full string", i), &i, |b, i| {
+            b.iter(|| ctrl_string.get_fast_full(**i))
         });
     }
 }

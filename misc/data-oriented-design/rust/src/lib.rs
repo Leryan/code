@@ -32,7 +32,9 @@ pub mod lib {
 
     pub struct Ctrl<V> {
         slow: HashMap<i32, Value<V>>,
+        slow_fast: HashMap<i32, V>,
         fast_idx: Vec<V>,
+        fast_full_idx: Vec<Value<V>>,
         fast_map: HashMap<i32, usize>,
     }
 
@@ -42,22 +44,38 @@ pub mod lib {
                 slow: HashMap::new(),
                 fast_idx: Vec::new(),
                 fast_map: HashMap::new(),
+                fast_full_idx: Vec::new(),
+                slow_fast: HashMap::new(),
             }
         }
 
         pub fn absorbe(&mut self, element: Value<V>) {
-            self.fast_idx.push(element.data());
+            self.fast_idx.push(element.data().clone());
             self.fast_map.insert(element.key(), self.fast_idx.len() - 1);
+            self.fast_full_idx.push(element.clone());
+            // HashMap returns a reference and not a copy of a value, so demonstrating with dicts
+            // doesn't really show anything regarding DoD.
+            // Except that strings are slow af.
             self.slow.insert(element.key(), element.clone());
+            self.slow_fast.insert(element.key(), element.data().clone());
         }
 
         pub fn get_slow(&self, key: i32) -> Value<V> {
             return self.slow.get(&key).unwrap().clone();
         }
 
+        pub fn get_slow_fast(&self, key: i32) -> V {
+            return self.slow_fast.get(&key).unwrap().clone();
+        }
+
         pub fn get_fast(&self, key: i32) -> V {
             let i = *self.fast_map.get(&key).unwrap();
             return self.fast_idx.get(i).unwrap().clone();
+        }
+
+        pub fn get_fast_full(&self, key: i32) -> Value<V> {
+            let i = *self.fast_map.get(&key).unwrap();
+            return self.fast_full_idx.get(i).unwrap().clone();
         }
     }
 }
