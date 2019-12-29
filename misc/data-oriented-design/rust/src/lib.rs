@@ -36,17 +36,23 @@ pub mod lib {
         fast_idx: Vec<V>,
         fast_full_idx: Vec<Value<V>>,
         fast_map: HashMap<i32, usize>,
+        name: String,
     }
 
     impl<V: Clone> Ctrl<V> {
-        pub fn new() -> Self {
+        pub fn new(name: &str) -> Self {
             Ctrl {
                 slow: HashMap::new(),
                 fast_idx: Vec::new(),
                 fast_map: HashMap::new(),
                 fast_full_idx: Vec::new(),
                 slow_fast: HashMap::new(),
+                name: name.to_string(),
             }
+        }
+
+        pub fn name(&self) -> &str {
+            &self.name.as_str()
         }
 
         pub fn absorbe(&mut self, element: Value<V>) {
@@ -61,21 +67,21 @@ pub mod lib {
         }
 
         pub fn get_slow(&self, key: i32) -> Value<V> {
-            return self.slow.get(&key).unwrap().clone();
+            self.slow.get(&key).unwrap().clone()
         }
 
         pub fn get_slow_fast(&self, key: i32) -> V {
-            return self.slow_fast.get(&key).unwrap().clone();
+            self.slow_fast.get(&key).unwrap().clone()
         }
 
         pub fn get_fast(&self, key: i32) -> V {
             let i = *self.fast_map.get(&key).unwrap();
-            return self.fast_idx.get(i).unwrap().clone();
+            self.fast_idx.get(i).unwrap().clone()
         }
 
         pub fn get_fast_full(&self, key: i32) -> Value<V> {
             let i = *self.fast_map.get(&key).unwrap();
-            return self.fast_full_idx.get(i).unwrap().clone();
+            self.fast_full_idx.get(i).unwrap().clone()
         }
     }
 }

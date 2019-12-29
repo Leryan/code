@@ -6,8 +6,8 @@ use criterion::{BenchmarkId, Criterion};
 
 fn bench_ctrl(c: &mut Criterion) {
     let elements = 100000;
-    let mut ctrl_i64 = Ctrl::new();
-    let mut ctrl_string = Ctrl::new();
+    let mut ctrl_i64 = Ctrl::new("i64");
+    let mut ctrl_string = Ctrl::new("String");
     for key in 0..elements {
         let vi64: Value<i64> = Value {
             key: key,
@@ -39,38 +39,56 @@ fn bench_ctrl(c: &mut Criterion) {
         ctrl_string.absorbe(vs);
     }
 
-    let mut group = c.benchmark_group("ctrl");
+    let mut group = c.benchmark_group("dod");
+    let ctrl = ctrl_i64;
     for i in [1000].iter() {
-        group.bench_with_input(BenchmarkId::new("slow i64", i), &i, |b, i| {
-            b.iter(|| ctrl_i64.get_slow(**i))
+        let id = format!("ctrl: {:?}: direct map -> Value<T>", ctrl.name());
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.get_slow(**i))
         });
 
-        group.bench_with_input(BenchmarkId::new("slow fast i64", i), &i, |b, i| {
-            b.iter(|| ctrl_i64.get_slow_fast(**i))
+        let id = format!("ctrl: {:?}: direct map -> T", ctrl.name());
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.get_slow_fast(**i))
         });
 
-        group.bench_with_input(BenchmarkId::new("fast i64", i), &i, |b, i| {
-            b.iter(|| ctrl_i64.get_fast(**i))
+        let id = format!("ctrl: {:?}: map -> idx -> vec[idx] -> T", ctrl.name());
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.get_fast(**i))
         });
 
-        group.bench_with_input(BenchmarkId::new("fast full i64", i), &i, |b, i| {
-            b.iter(|| ctrl_i64.get_fast_full(**i))
+        let id = format!(
+            "ctrl: {:?}: map -> idx -> vec[idx] -> Value<T>",
+            ctrl.name()
+        );
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.get_fast_full(**i))
+        });
+    }
+
+    let ctrl = ctrl_string;
+    for i in [1000].iter() {
+        let id = format!("ctrl: {:?}: direct map -> Value<T>", ctrl.name());
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.get_slow(**i))
         });
 
-        group.bench_with_input(BenchmarkId::new("slow string", i), &i, |b, i| {
-            b.iter(|| ctrl_string.get_slow(**i))
+        let id = format!("ctrl: {:?}: direct map -> T", ctrl.name());
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.get_slow_fast(**i))
         });
 
-        group.bench_with_input(BenchmarkId::new("slow fast string", i), &i, |b, i| {
-            b.iter(|| ctrl_string.get_slow_fast(**i))
+        let id = format!("ctrl: {:?}: map -> idx -> vec[idx] -> T", ctrl.name());
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.get_fast(**i))
         });
 
-        group.bench_with_input(BenchmarkId::new("fast string", i), &i, |b, i| {
-            b.iter(|| ctrl_string.get_fast(**i))
-        });
-
-        group.bench_with_input(BenchmarkId::new("fast full string", i), &i, |b, i| {
-            b.iter(|| ctrl_string.get_fast_full(**i))
+        let id = format!(
+            "ctrl: {:?}: map -> idx -> vec[idx] -> Value<T>",
+            ctrl.name()
+        );
+        group.bench_with_input(BenchmarkId::new(id, i), &i, |b, i| {
+            b.iter(|| ctrl.get_fast_full(**i))
         });
     }
 }
