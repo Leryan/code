@@ -93,4 +93,68 @@ pub mod lib {
             self.fast_full_idx.get(i).unwrap()
         }
     }
+
+    pub struct SOA {
+        pub x: Vec<i64>,
+        pub y: Vec<i64>,
+        pub z: Vec<i64>,
+    }
+
+    impl SOA {
+        pub fn new() -> Self {
+            SOA {
+                x: vec![],
+                y: vec![],
+                z: vec![],
+            }
+        }
+    }
+
+    #[derive(Debug, Clone, Copy)]
+    pub struct Vec3d {
+        pub x: i64,
+        pub y: i64,
+        pub z: i64,
+    }
+
+    pub struct SOAoAOSCtrl {
+        soa: SOA,
+        aos: Vec<Vec3d>,
+    }
+
+    impl SOAoAOSCtrl {
+        pub fn new() -> Self {
+            SOAoAOSCtrl {
+                soa: SOA::new(),
+                aos: vec![],
+            }
+        }
+        pub fn add(&mut self, vec3d: Vec3d) {
+            self.soa.x.push(vec3d.x);
+            self.soa.y.push(vec3d.y);
+            self.soa.z.push(vec3d.z);
+
+            self.aos.push(vec3d);
+        }
+
+        pub fn soa_translate(&mut self, vec3d: Vec3d) {
+            for v in self.soa.x.iter_mut() {
+                *v += vec3d.x;
+            }
+            for v in self.soa.y.iter_mut() {
+                *v += vec3d.y;
+            }
+            for v in self.soa.z.iter_mut() {
+                *v += vec3d.z;
+            }
+        }
+
+        pub fn aos_translate(&mut self, vec3d: Vec3d) {
+            for v in self.aos.iter_mut() {
+                v.x += vec3d.x;
+                v.y += vec3d.y;
+                v.z += vec3d.z;
+            }
+        }
+    }
 }
