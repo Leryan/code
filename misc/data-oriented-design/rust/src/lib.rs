@@ -120,12 +120,14 @@ pub mod lib {
     pub struct SOAoAOSCtrl {
         soa: SOA,
         aos: Vec<Vec3d>,
+        soa_cold: SOA,
     }
 
     impl SOAoAOSCtrl {
         pub fn new() -> Self {
             SOAoAOSCtrl {
                 soa: SOA::new(),
+                soa_cold: SOA::new(),
                 aos: vec![],
             }
         }
@@ -133,11 +135,14 @@ pub mod lib {
             self.soa.x.push(vec3d.x);
             self.soa.y.push(vec3d.y);
             self.soa.z.push(vec3d.z);
+            self.soa_cold.x.reserve(1);
+            self.soa_cold.y.reserve(1);
+            self.soa_cold.z.reserve(1);
 
             self.aos.push(vec3d);
         }
 
-        pub fn soa_translate(&mut self, vec3d: Vec3d) {
+        pub fn soa_translate_inplace(&mut self, vec3d: Vec3d) {
             for v in self.soa.x.iter_mut() {
                 *v += vec3d.x;
             }
@@ -149,7 +154,24 @@ pub mod lib {
             }
         }
 
-        pub fn aos_translate(&mut self, vec3d: Vec3d) {
+        pub fn soa_translate_copy(&mut self, vec3d: Vec3d) {
+            for v in self.soa.x.iter() {
+                self.soa_cold.x.push(v + vec3d.x);
+            }
+            for v in self.soa.y.iter() {
+                self.soa_cold.y.push(v + vec3d.y);
+            }
+            for v in self.soa.z.iter() {
+                self.soa_cold.z.push(v + vec3d.z);
+            }
+
+            std::mem::swap(&mut self.soa, &mut self.soa_cold);
+            self.soa_cold.x.clear();
+            self.soa_cold.y.clear();
+            self.soa_cold.z.clear();
+        }
+
+        pub fn aos_translate_inplace(&mut self, vec3d: Vec3d) {
             for v in self.aos.iter_mut() {
                 v.x += vec3d.x;
                 v.y += vec3d.y;

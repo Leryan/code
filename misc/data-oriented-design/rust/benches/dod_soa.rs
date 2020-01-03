@@ -18,10 +18,15 @@ fn bench_soa(c: &mut Criterion) {
     let translate = Vec3d { x: 4, y: -3, z: 8 };
     let mut group = c.benchmark_group("DOD SOA vs AOS");
     {
-        group.bench_function("AOS", |b| b.iter(|| ctrl.aos_translate(translate)));
+        group.bench_function("SOA copy", |b| {
+            b.iter(|| ctrl.soa_translate_copy(translate))
+        });
     }
     {
-        group.bench_function("SOA", |b| b.iter(|| ctrl.soa_translate(translate)));
+        group.bench_function("AOS", |b| b.iter(|| ctrl.aos_translate_inplace(translate)));
+    }
+    {
+        group.bench_function("SOA", |b| b.iter(|| ctrl.soa_translate_inplace(translate)));
     }
 }
 
