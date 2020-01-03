@@ -64,20 +64,15 @@ int main(void) {
     Vec3D translate = {-1, 2, 8};
 
     double times = 0.0;
-    int counted = 0;
+    int runs = 0;
 
-    for (int runs = 0; runs < 10; runs++) {
+    for (runs = 0; runs < 5; runs++) {
         for (int i = 0; i < LOOPS; i++) {
             double ts = get_time();
             soa_translate(soa, translate);
             times += (double)(get_time() - ts) / CLOCKS_PER_SEC;
         }
-        if (runs < 5) {
-           times = 0.0;
-        } else {
-            counted++;
-        }
         printf("loop %d: %ld %ld %ld\n", runs, soa_x[10], soa_y[10], soa_z[10]);
     }
-    printf("%f\n", times / (double)(LOOPS * counted));
+    printf("%f\n", times / (double)(LOOPS * runs));
 }
