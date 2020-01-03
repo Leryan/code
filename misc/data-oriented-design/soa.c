@@ -31,7 +31,7 @@ void soa_translate(SOA soa, Vec3D vec) {
 #define INC 4
 #define INCM INC-1
 #define SOA(field, offset) soa.field[i+offset] += vec.field;
-    uint64_t max = soa.s + INCM;
+    uint64_t max = soa.s + INCM; // 100% guaranteed *with* buffer overflow.
 
     for (uint64_t i = 0; i < max; i += INC) {
         SOA(x, 0)
