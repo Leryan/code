@@ -1,0 +1,14 @@
+dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+replace: olcSuffix
+olcSuffix: {{ openldap_domain_suffix }}
+
+dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+replace: olcRootDN
+olcRootDN: {{ openldap_manager_dn }}
+
+dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+add: olcRootPW
+olcRootPW: {{ openldap_manager_hash }}

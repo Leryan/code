@@ -1,0 +1,19 @@
+---
+openldap_reset: false
+openldap_import: false
+openldap_custom_ldif_import: 'import.ldif'
+
+openldap_config_passwd: 'root'
+openldap_config_hash: '{SSHA}8dqgqcRWcRLiVVTbRH4YRLpDbDdKCGFO'
+
+openldap_domain_dn: 'dc=domain'
+openldap_domain_suffix: 'dc=domain'
+openldap_domain_name: 'domain'
+
+openldap_manager_dn: 'cn=manager,dc=domain'
+openldap_manager_passwd: 'manager'
+openldap_manager_hash: '{SSHA}MIxAMzhEenY/G3FrYhG1U3ofUKHbtX4t'
+
+openldap_tls: false
+openldap_pem_cert_file: ''
+openldap_pem_key_file: ''

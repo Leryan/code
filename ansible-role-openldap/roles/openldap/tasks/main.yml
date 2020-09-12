@@ -1,0 +1,115 @@
+---
+- include_vars: "{{ ansible_os_family }}.yml"
+
+- name: install OpenLDAP packages
+  action: "{{ ansible_pkg_mgr }} state=present name={{ openldap_packages | join(',') }}"
+
+- name: ensure OpenLDAP is stopped
+  service:
+    name: "{{ openldap_service }}"
+    state: stopped
+  when: openldap_reset
+
+- name: remove any existing OpenLDAP configuration
+  shell: "rm -rf {{ openldap_config_dir }}/*"
+  when: openldap_reset
+
+- name: remove any existing OpenLDAP database
+  shell: "rm -rf {{ openldap_database_dir }}/*"
+  when: openldap_reset
+
+- name: prepare 00-config.ldif
+  template:
+    src: 00-config.ldif
+    dest: /tmp/ldap.ldif
+    owner: root
+    group: root
+    mode: 0600
+  when: openldap_reset
+
+- name: generate slapd.d config files from config.ldif
+  command: "slapadd -F {{ openldap_config_dir }} -n 0 -l /tmp/ldap.ldif"
+  when: openldap_reset
+
+- name: ensure OpenLDAP can access to generated configuration files
+  file:
+    path: "{{ openldap_config_dir }}"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    state: directory
+    recurse: yes
+    mode: 0750
+  when: openldap_reset
+
+
+- name: start and enable OpenLDAP
+  service:
+    name: "{{ openldap_service }}"
+    state: started
+    enabled: yes
+
+- name: prepare 01-bases.ldif
+  template:
+    src: 01-bases.ldif
+    dest: /tmp/ldap.ldif
+    owner: root
+    group: root
+    mode: 0600
+  when: openldap_reset
+
+- name: create initial tree database
+  command: "ldapadd -h localhost -x -D cn=config -w {{ openldap_config_passwd }} -f /tmp/ldap.ldif"
+  when: openldap_reset
+
+- name: prepare 02-manager.ldif
+  template:
+    src: 02-manager.ldif
+    dest: /tmp/ldap.ldif
+    owner: root
+    group: root
+    mode: 0600
+  when: openldap_reset
+
+- name: configure our manager user for the new database
+  command: "ldapmodify -h localhost -x -D cn=config -w {{ openldap_config_passwd }} -f /tmp/ldap.ldif"
+  when: openldap_reset
+
+- name: prepare 03-prov.ldif
+  template:
+    src: 03-prov.ldif
+    dest: /tmp/ldap.ldif
+    owner: root
+    group: root
+    mode: 0600
+  when: openldap_reset
+
+- name: create the root domain in our new database
+  command: "ldapadd -h localhost -x -D {{ openldap_manager_dn }} -w {{ openldap_manager_passwd }} -f /tmp/ldap.ldif"
+  when: openldap_reset
+
+- name: remove temporary ldif file
+  file:
+    path: '/tmp/ldap.ldif'
+    state: absent
+  when: openldap_reset
+
+- name: copy custom LDIF file
+  copy:
+    src: "{{ openldap_custom_ldif_import }}"
+    dest: '/tmp/ldap.ldif'
+    owner: root
+    group: root
+    mode: 0600
+  when: openldap_import
+  tags: openldap_import
+
+- name: import custom LDIF file
+  command: "ldapmodify -h localhost -x -D {{ openldap_manager_dn }} -w {{ openldap_manager_passwd }} -f /tmp/ldap.ldif"
+  when: openldap_import
+  tags: openldap_import
+
+- name: remove temporary ldif file
+  file:
+    path: '/tmp/ldap.ldif'
+    state: absent
+  when: openldap_import

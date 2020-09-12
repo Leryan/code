@@ -1,0 +1,6 @@
+/build
+*.swp
+/*.egg-info
+/dist
+/test.ini
+__pycache__

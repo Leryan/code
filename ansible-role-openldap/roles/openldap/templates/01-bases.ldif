@@ -1,0 +1,8 @@
+dn: olcDatabase={1}hdb,cn=config
+objectclass: olcDatabaseConfig
+objectclass: olcHdbConfig
+olcDatabase: {1}hdb
+olcDbDirectory: {{ openldap_database_dir }}
+olcDbIndex: objectClass eq,pres
+olcDbIndex: ou,cn,mail,surname,givenname eq,pres,sub
+olcSuffix: {{ openldap_domain_suffix }}

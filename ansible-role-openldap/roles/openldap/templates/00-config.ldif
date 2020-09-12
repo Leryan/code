@@ -1,0 +1,37 @@
+dn: cn=config
+objectClass: olcGlobal
+cn: config
+olcAttributeOptions: x-hidden lang-
+{% if openldap_tls %}
+olcTLSCertificateFile: {{ openldap_pem_cert_file }}
+olcTLSCertificateKeyFile: {{ openldap_pem_key_file }}
+{% endif %}
+
+dn: cn=schema,cn=config
+objectClass: olcSchemaConfig
+cn: schema
+
+include: file:///etc/openldap/schema/core.ldif
+include: file:///etc/openldap/schema/cosine.ldif
+include: file:///etc/openldap/schema/inetorgperson.ldif
+
+dn: olcDatabase=frontend,cn=config
+objectClass: olcDatabaseConfig
+objectClass: olcFrontendConfig
+olcDatabase: frontend
+# Subtypes of "name" (e.g. "cn" and "ou") with the
+# option ";x-hidden" can be searched for/compared,
+# but are not shown.  See slapd.access(5).
+olcAccess: to attrs=name;x-hidden by * =cs
+# Protect passwords.  See slapd.access(5).
+olcAccess: to attrs=userPassword  by * auth
+# Read access to other attributes and entries.
+olcAccess: to * by * read
+
+# set a rootpw for the config database so we can bind.
+# deny access to everyone else.
+dn: olcDatabase=config,cn=config
+objectClass: olcDatabaseConfig
+olcDatabase: config
+olcRootPW: {{ openldap_config_hash }}
+olcAccess: to * by * none

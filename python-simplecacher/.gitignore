@@ -1,0 +1,6 @@
+*.pyc
+*.cache
+*.swp
+keys
+simplecacher.ini
+cache
