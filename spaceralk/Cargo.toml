@@ -1,0 +1,17 @@
+[package]
+description = "library and binary to speak to the spacewalk RPC API"
+name = "spaceralk"
+version = "0.2.0"
+authors = ["Florent Peterschmitt <fpeterschmitt@capensis.fr>"]
+repository = "https://github.com/Leryan/spaceralk"
+keywords = ["spacewalk"]
+license = "MIT"
+
+[[bin]]
+name = "spaceralk"
+doc = false
+
+[dependencies]
+xmlrpc = ">=0.4.0"
+argparse = ">=0.2.1"
+serde_json = ">=0.9.5"
