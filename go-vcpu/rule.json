@@ -1,0 +1,7 @@
+{
+    "$and": [
+        {"component": "comp1"},
+        {"resource": "res1"},
+        {"state": 2}
+    ]
+}

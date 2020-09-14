@@ -1,0 +1,39 @@
+TODO list | Marrrins											
+											
+Forum – classes:											
+Afficher la description de la classe											
+Si un topic contient hold à 1, alors l'afficher toujours en haut de la liste, puis traiter en fonction du timestamp											
+											
+Forum – topics											
+Numéroté les pages des topics à raison de 50 topics par page											
+Afficher la description du topic. Description donnée par l'utiilsateur lors de l'enregistrement du topic											
+											
+Forum – messages											
+Numéroté les pages des messages à raison de 15 messages par page											
+Ces informations doivent apparaître également lors de l'ajout d'un message !											
+Lors de l'ajout d'un message, seul les 30 derniers messages seront affichés											
+											
+Administration –articles											
+Page de suppression d'un article. Limiter la suppression des articles a ses propres articles											
+											
+Administration – membres											
+Page de suppression d'un membre											
+Page de modification des droits d'un membre											
+Page de renouvellement du mot de passe: générateur de mot de passe, cryptage en sha1, envoi dans la BDD et envoi d'un email contenant le nouveau mot de passe											
+La page de renouvellement sera accèssible par le biès de la page login avec un lien « j'ai oublié mon mot de passe ! »											
+											
+Administration – forum											
+Ajout de la description d'une classe du forum lors de la description d'une classe.											
+Suppression d'une classe du forum. Entraire la suppression des topics liés ainsi que des messages liés.											
+Modification du nom d'une classe.											
+Modification de la description d'une classe.											
+Possibilité de fermer un topic. Afficher le bouton répondre si topic_close != 1. Pareil pour la page d'envoi de message (éviter le hacking !)											
+Possibilité, pour les admins, de créer un topic fermé ainsi qu'une classe fermée. Pour le règlement par exemple.											
+											
+Mise en forme – CSS générale											
+Séparer la mise en forme du forum du reste de la mise en forme du site.
+											
+Mise en forme – CSS du forum											
+Une image pour indiquer un nouveau post.
+Encadrement de l'avatar (faire la place pour) ainsi que le post: coller les bordures. Pareil pour l'indicaiton de nouveau post qui contient le pseudo, date et heure.											
+

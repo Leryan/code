@@ -1,0 +1,11 @@
+load state
+move 2 float64
+eq
+load component
+move comp1
+eq
+and
+load resource
+move res1
+eq
+and

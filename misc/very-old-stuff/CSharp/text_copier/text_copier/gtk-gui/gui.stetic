@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<stetic-interface>
+  <configuration>
+    <images-root-path>..</images-root-path>
+    <target-gtk-version>2.12</target-gtk-version>
+  </configuration>
+  <import>
+    <widget-library name="glade-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f" />
+    <widget-library name="../bin/Release/text_copier.exe" internal="true" />
+  </import>
+  <widget class="Gtk.Window" id="MainWindow" design-size="815 482">
+    <property name="MemberName" />
+    <property name="Title" translatable="yes">MainWindow</property>
+    <property name="WindowPosition">CenterOnParent</property>
+    <property name="Resizable">False</property>
+    <property name="AllowShrink">True</property>
+    <signal name="DeleteEvent" handler="OnDeleteEvent" />
+    <child>
+      <widget class="Gtk.Fixed" id="cntFixed">
+        <property name="MemberName" />
+        <property name="HasWindow">False</property>
+        <child>
+          <placeholder />
+        </child>
+        <child>
+          <placeholder />
+        </child>
+        <child>
+          <placeholder />
+        </child>
+        <child>
+          <widget class="Gtk.ScrolledWindow" id="GtkScrolledWindow">
+            <property name="MemberName" />
+            <property name="WidthRequest">525</property>
+            <property name="HeightRequest">321</property>
+            <property name="ShadowType">In</property>
+            <child>
+              <widget class="Gtk.TextView" id="txtViewText">
+                <property name="MemberName" />
+                <property name="CanFocus">True</property>
+                <property name="ShowScrollbars">True</property>
+                <property name="Text" translatable="yes">Bon@@jour
+</property>
+              </widget>
+            </child>
+          </widget>
+        </child>
+        <child>
+          <widget class="Gtk.Entry" id="entry1">
+            <property name="MemberName" />
+            <property name="CanFocus">True</property>
+            <property name="Text" translatable="yes">@@</property>
+            <property name="IsEditable">True</property>
+            <property name="InvisibleChar">●</property>
+          </widget>
+          <packing>
+            <property name="X">540</property>
+            <property name="Y">19</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Label" id="lblSymbol">
+            <property name="MemberName" />
+            <property name="LabelProp" translatable="yes">Symbol to replace</property>
+          </widget>
+          <packing>
+            <property name="X">540</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Entry" id="txtStart">
+            <property name="MemberName" />
+            <property name="WidthRequest">25</property>
+            <property name="CanFocus">True</property>
+            <property name="Text" translatable="yes">1</property>
+            <property name="IsEditable">True</property>
+            <property name="InvisibleChar">●</property>
+          </widget>
+          <packing>
+            <property name="X">568</property>
+            <property name="Y">67</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.ScrolledWindow" id="GtkScrolledWindow1">
+            <property name="MemberName" />
+            <property name="WidthRequest">523</property>
+            <property name="HeightRequest">114</property>
+            <property name="ShadowType">In</property>
+            <child>
+              <widget class="Gtk.TextView" id="textview1">
+                <property name="MemberName" />
+                <property name="CanFocus">True</property>
+                <property name="ShowScrollbars">True</property>
+                <property name="Text" translatable="yes" />
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="Y">326</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Entry" id="txtBy">
+            <property name="MemberName" />
+            <property name="WidthRequest">25</property>
+            <property name="CanFocus">True</property>
+            <property name="Text" translatable="yes">1</property>
+            <property name="IsEditable">True</property>
+            <property name="InvisibleChar">●</property>
+          </widget>
+          <packing>
+            <property name="X">636</property>
+            <property name="Y">67</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Label" id="label1">
+            <property name="MemberName" />
+            <property name="LabelProp" translatable="yes">Start</property>
+          </widget>
+          <packing>
+            <property name="X">540</property>
+            <property name="Y">71</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Label" id="label2">
+            <property name="MemberName" />
+            <property name="LabelProp" translatable="yes">inc. by</property>
+          </widget>
+          <packing>
+            <property name="X">596</property>
+            <property name="Y">71</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Label" id="label3">
+            <property name="MemberName" />
+            <property name="LabelProp" translatable="yes">to</property>
+          </widget>
+          <packing>
+            <property name="X">664</property>
+            <property name="Y">71</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Entry" id="txtTo">
+            <property name="MemberName" />
+            <property name="WidthRequest">25</property>
+            <property name="CanFocus">True</property>
+            <property name="Text" translatable="yes">8</property>
+            <property name="IsEditable">True</property>
+            <property name="InvisibleChar">●</property>
+          </widget>
+          <packing>
+            <property name="X">680</property>
+            <property name="Y">67</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="Gtk.Button" id="cmdReplace">
+            <property name="MemberName" />
+            <property name="CanFocus">True</property>
+            <property name="Type">TextOnly</property>
+            <property name="Label" translatable="yes">Replace</property>
+            <property name="UseUnderline">True</property>
+            <signal name="Clicked" handler="OnCmdReplaceClicked" />
+          </widget>
+          <packing>
+            <property name="X">540</property>
+            <property name="Y">106</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</stetic-interface>

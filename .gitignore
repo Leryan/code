@@ -1,2 +1,6 @@
 __pycache__
 *.pyc
+.mypy_cache
+/jenerics/dist/
+/.idea
+/.vscode

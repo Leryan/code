@@ -1,0 +1,9 @@
+[
+    {
+        "$and": [
+            {"resource": {"$eq": "bla"}},
+            {"resource": {"$ne": "prout"}},
+            {"resource": "bla"}
+        ]
+    }
+]

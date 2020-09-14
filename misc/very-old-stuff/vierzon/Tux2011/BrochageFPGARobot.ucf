@@ -1,0 +1,65 @@
+net Clk28MHz loc = p90;
+net Clk28MHz IOSTANDARD = LVCMOS33;
+
+
+net TSOP(0) loc = p9;
+net TSOP(1) loc = p10;
+net TSOP(2) loc = p12;
+net TSOP(3) loc = p13;
+net TSOP(4) loc = p15;
+net TSOP(5) loc = p16;
+net TSOP(6) loc = p19;
+net TSOP(7) loc = p20;
+
+net TSOP(0) IOSTANDARD = LVCMOS33;
+net TSOP(1) IOSTANDARD = LVCMOS33;
+net TSOP(2) IOSTANDARD = LVCMOS33;
+net TSOP(3) IOSTANDARD = LVCMOS33;
+net TSOP(4) IOSTANDARD = LVCMOS33;
+net TSOP(5) IOSTANDARD = LVCMOS33;
+net TSOP(6) IOSTANDARD = LVCMOS33;
+net TSOP(7) IOSTANDARD = LVCMOS33;
+
+
+net ledR loc = p51;
+net ledV loc = p52;
+net led1 loc = p59;
+net led2 loc = p60;
+net led3 loc = p61;
+net led4 loc = p62;
+
+net ledV IOSTANDARD = LVCMOS33;
+net ledR IOSTANDARD = LVCMOS33;
+net led1 IOSTANDARD = LVCMOS33;
+net led2 IOSTANDARD = LVCMOS33;
+net led3 IOSTANDARD = LVCMOS33;
+net led4 IOSTANDARD = LVCMOS33;
+
+
+# Gp : 3 -> Dm : 0
+net inGpGmDpDm(0) loc = p70;
+net inGpGmDpDm(1) loc = p71;
+net inGpGmDpDm(2) loc = p72;
+net inGpGmDpDm(3) loc = p73;
+
+net inGpGmDpDm(0) IOSTANDARD = LVCMOS33;
+net inGpGmDpDm(1) IOSTANDARD = LVCMOS33;
+net inGpGmDpDm(2) IOSTANDARD = LVCMOS33;
+net inGpGmDpDm(3) IOSTANDARD = LVCMOS33;
+
+
+# obstable avant Droit
+net Jack loc = p33;
+net Jack IOSTANDARD = LVCMOS33;
+
+# opto avant G
+net FinCourse loc = p35;
+net FinCourse IOSTANDARD = LVCMOS33;
+
+# US avant G
+net ObstacleD loc = p40;
+net ObstacleD IOSTANDARD = LVCMOS33;
+
+# US avant D
+net ObstacleG loc = p43;
+net ObstacleG IOSTANDARD = LVCMOS33;

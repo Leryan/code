@@ -1,0 +1,18 @@
+[package]
+description = "A feed reader so tiny it wont do much things."
+name = "femto-feed"
+version = "0.3.1"
+authors = ["Florent Peterschmitt <florent@peterschmitt.fr>"]
+edition = "2018"
+license = "MIT"
+repository = "https://gitlab.com/Leryan/femto-feed"
+
+[lib]
+name = "lib"
+path = "src/lib.rs"
+
+[dependencies]
+feed-rs = "0.1"
+reqwest = "0.9"
+chrono = "0.4"
+clap = "2"

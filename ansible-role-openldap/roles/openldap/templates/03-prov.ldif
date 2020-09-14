@@ -1,0 +1,3 @@
+dn: {{ openldap_domain_dn }}
+objectclass: domain
+dc: {{ openldap_domain_name }}

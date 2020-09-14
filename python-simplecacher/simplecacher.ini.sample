@@ -1,0 +1,52 @@
+[app]
+bind_address = 0.0.0.0
+bind_port = 9000
+tls_mitm = 0
+loglevel = info
+
+[proxy]
+loglevel = info
+
+[http]
+loglevel = critical
+
+[streamer]
+recv_buffer = 8192
+cache_read_buffer = 8192
+loglevel = info
+
+[cache]
+enable = 1
+allowed_ext = rpm deb tgz png svg jpg jpeg gif
+allowed_urls = ./allowed_urls.txt
+object_path = cache
+# set validity_seconds to 0 for infinite time
+validity_seconds = 86400
+loglevel = info
+
+[cachecompute]
+mode = path
+#mode = filename
+with_host = 1
+hash_filename = 0
+
+[tls]
+loglevel = info
+validity_days = 7
+store_path = keys
+sign_with_ca = 1 # if 0, auto-sign. Bad idea.
+ca_key_file = ~/doc/depots/m/genssl/ca/keys/SimpleCacher.ca.key
+ca_crt_file = ~/doc/depots/m/genssl/ca/certs/SimpleCacher.ca.crt
+ca_serial_file = ~/doc/depots/m/genssl/serial
+ca_openssl_config = ~/doc/depots/m/genssl/openssl.cnf
+subj_country = FR
+subj_state = France
+subj_locality = Lille
+subj_organization = SimpleCacher
+subj_ounit = SimpleCacherTLS
+subj_email = root@localhost
+openssl_bin = /usr/bin/openssl
+#certificate_validation_mode = CERT_REQUIRED
+#certificate_validation_mode = CERT_OPTIONAL
+certificate_validation_mode = CERT_NONE
+debug_openssl_cmd = 0

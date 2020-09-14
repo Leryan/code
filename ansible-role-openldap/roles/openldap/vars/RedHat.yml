@@ -1,0 +1,12 @@
+---
+openldap_packages:
+  - openldap-servers
+  - openldap-clients
+
+openldap_config_dir: '/etc/openldap/slapd.d/'
+openldap_database_dir: '/var/lib/ldap/'
+
+openldap_service: 'slapd.service'
+
+openldap_user: ldap
+openldap_group: ldap

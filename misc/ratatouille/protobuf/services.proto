@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package ratatouille;
+
+option go_package = ".;ratatouille";
+
+import "google/protobuf/empty.proto";
+
+service MotherService {
+    rpc Do(Stuff) returns (Mother);
+    rpc Unicorn(google.protobuf.Empty) returns (Derp);
+}
+
+service SonService {
+    rpc Do(Stuff) returns (Son);
+    rpc Belch(google.protobuf.Empty) returns (Loudness);
+}
+
+message Stuff {
+    string stuff = 1;
+}
+
+message Mother {
+    string msg = 1;
+}
+
+message Derp {
+    string name = 1;
+}
+
+message Son {
+    string msg = 1;
+}
+
+message Loudness {
+    uint64 db = 1;
+}

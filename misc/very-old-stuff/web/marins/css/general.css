@@ -1,0 +1,151 @@
+body{
+	margin: auto;
+	background-image: url("../img/css/centre_f.png");
+	padding: 0;
+	height: 100%;
+	font-size: 15px;
+	font-family:Verdana, Tahoma, Arial, Helvetica, sans-serif;
+	min-height: 400px;
+	height:100%:
+
+}
+
+a{
+	color: white;
+	text-decoration: none;
+}
+
+a:hover{
+	color: white;
+	text-decoration: underline;
+}
+#titre_header{
+	width:580px;
+	height:39px;
+	background-image:url(../img/css/header.jpg);
+	padding-top:85px;
+	padding-left:70px;
+	margin-left:0 !important; /* HACK IE : */
+	margin-left:-352px;
+}
+#header{
+	width:100%;
+	background-image:url(../img/css/header_f.png);
+	border-bottom:#d4d4d2 solid 2px;
+	margin-top:-1px;
+}
+#header h1{
+	font-size:2em;
+	color:#4f4f4f;
+	letter-spacing:-1px;
+	font-weight:600;
+	display:inline;
+}
+
+#menu a:hover{
+	color:#ccc;
+}
+
+.bouton{
+	background-image: url("../img/css/menu.png");
+	color:#555;
+	font-size:0.9em;
+	font-weight:bold;
+	padding-top:10px;
+	padding-left:5px;
+	width:163px;
+	height:25px;
+
+}
+
+#menu{
+	width: 150px;
+	float: left;
+}
+
+#menu a{
+	font-weight:800;
+	font-size:0.7em;
+	color:#fff;
+	text-decoration:none;
+}
+
+.list{
+	list-style-type: none;
+}
+
+img{
+	border: none;
+}
+
+#conteneur{
+	min-height: 400px;
+}
+
+#corps{
+	padding-top: 20px;
+	margin-left: 180px;
+	color:#555;
+	font-size:0.8em;
+}
+
+#corps h2{
+	font-size:0.9em;
+	font-weight:bold;
+	display:inline;
+}
+
+#corps a{
+	color: gray;
+	text-decoration: none;
+}
+
+#corps a:hover{
+	color: grey;
+	text-decoration: underline;
+}
+/* Présentation des différentes classes du forum */
+
+.forum{
+	text-align: center;
+	min-width: 180px;
+}
+
+/* Ici la mise en forme de l'affichage des messages d'un topic */
+
+.forum_messages{
+	border-collapse: collapse;
+	min-width: 200px;
+	margin-bottom: 20px;
+}
+
+.forum_message{
+	min-width: 200px;
+	max-width: 1024px;
+	border: 1px solid gray;
+	padding: 5px 5px 5px 5px;
+}
+
+.forum_message_bar{
+	min-width: 200px;
+	background-color: #368bc1;
+	color: white;
+	min-width: 180px;
+}
+
+.forum_message_bar a{
+	color: white;
+	text-decoration: none;
+}
+
+.a_titre{
+	border-bottom: 1px solid gray;
+	border-top: 1px solid gray;
+}
+
+#footer{
+	border-top: 3px solid #d4d4d2;
+	color:#555;
+	margin-left: 150px;
+	font-size:0.8em;
+}
